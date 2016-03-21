@@ -1,5 +1,4 @@
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "struct.h"
@@ -18,6 +17,3 @@ tree tree_create(char * label, bool nullary, bool space, enum type tp,  attribut
   return t;
 }
 
-
-
-void main(){};
