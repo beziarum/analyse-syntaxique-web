@@ -18,4 +18,4 @@ web.yy.c: web.l
 	flex -o $@ $<
 
 autoStruct: struct.h main.c tree.c attributes.c
-	$(CC) -o $@ @<
+	$(CC) -o $@ $<
