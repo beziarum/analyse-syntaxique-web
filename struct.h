@@ -41,3 +41,4 @@ bool get_space(tree t);
 void set_space (tree t,bool space);
 enum type get_enum(tree t);
 void set_enum(tree t,enum type tp);
+void display_tree(tree t,int fils,int frere);
