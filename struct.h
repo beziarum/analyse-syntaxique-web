@@ -25,3 +25,19 @@ struct tree_t {
 
 typedef struct tree_t * tree;
 typedef struct attributes_t * attributes;
+
+
+tree get_daughters(tree t);
+void set_daughters (tree t,tree d);
+tree get_right(tree t);
+void set_right (tree t,tree r);
+char* get_label(tree t);
+void set_label (tree t,char * label);
+attributes get_attributes(tree t);
+void set_attributes (tree t,attributes attr);
+bool get_nullary(tree t);
+void set_nullary (tree t,bool nullary);
+bool get_space(tree t);
+void set_space (tree t,bool space);
+enum type get_enum(tree t);
+void set_enum(tree t,enum type tp);
