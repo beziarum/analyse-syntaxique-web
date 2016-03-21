@@ -14,8 +14,8 @@
 \/ {printf("slash : %s\n",yytext);}
 [:space:] {printf("espace : %s\n",yytext);}
 [:alpha:]+ {printf("mot : %s\n",yytext);}
-" {printf("guillemet : %s\n",yytext);}
-= {printf("egal : %s\n",yytext);}
+\" {printf("guillemet : %s\n",yytext);}
+\= {printf("egal : %s\n",yytext);}
 
 %%
 
