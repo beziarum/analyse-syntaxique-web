@@ -2,7 +2,7 @@ LEX=flex
 YACC=bison -d -v
 CC=gcc
 
-LDLIBS=-lfl
+LDLIBS=-lfl -ly
 CFLAGS=-std=c99 -Wall -Wpedantic
 
 all: web
@@ -19,3 +19,9 @@ web.yy.c: web.l
 
 autoStruct: struct.h main.c tree.c attributes.c
 	$(CC) -o $@ $<
+
+autoYacc: web.tab.c
+	$(CC) mainYacc.c tree.c web.yy.c web.tab.c $(LDLIBS) -o $@
+
+web.tab.c: web.y
+	$(YACC) $<
