@@ -35,3 +35,10 @@ attributes get_attribute_next (attributes attr) {
 void set_attribute_next (attributes attr, attributes next) {
   attr->next = next;
 }
+
+void display_attributes(attributes attr, int i) {
+  printf("Attribute %d :\nKey : %s\nValue : %s\n\n", i, attr->key, attr->value);
+  if (attr->next) {
+    display_attributes(attr->next, i+1);
+  }
+}
