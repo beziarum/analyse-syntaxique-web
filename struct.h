@@ -26,7 +26,7 @@ struct tree_t {
 typedef struct tree_t * tree;
 typedef struct attributes_t * attributes;
 
-
+tree tree_create(char * label, bool nullary, bool space, enum type tp,  attributes attr, tree daughters, tree right);
 tree get_daughters(tree t);
 void set_daughters (tree t,tree d);
 tree get_right(tree t);
