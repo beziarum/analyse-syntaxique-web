@@ -74,3 +74,13 @@ void set_enum(tree t,enum type tp){
   if (tp == WORD)
     t->nullary = true;
 }
+
+void display_tree(tree t,int fils,int frere){
+  if((fils == 0) && (frere==0))
+    printf("racine de l'arbre ");
+  else 
+    printf("profondeur fils = %d et frere = %d ",fils,frere);
+  printf("label = %s \n",t->label);
+  display_tree(t->daughters,fils+1,frere);
+  display_tree(t->right,fils,frere+1);
+}
