@@ -17,13 +17,18 @@ void yyerror(char  *);
 %type	<t>		NODE FOREST
 %%
 
+
 FOREST:		NODE FOREST
 		{
 		    set_right($1,$2);
 		    $$=$1;
 		    display_tree($1,0,0);
+		    printf("test\n");
 		}
-	|	NODE
+	|	%empty
+		{
+		    $$=NULL;
+		}
 	;
 
 NODE:		TAG OPEN_BRACKET CLOSE_BRACKET
@@ -40,3 +45,5 @@ NODE:		TAG OPEN_BRACKET CLOSE_BRACKET
 		}
 	;
 
+NNODE:		OPEN_BRACKET CLOSE_BRACKET
+	;
