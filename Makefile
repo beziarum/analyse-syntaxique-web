@@ -18,10 +18,10 @@ web.yy.c: web.l
 	flex -o $@ $<
 
 autoStruct: struct.h main.c tree.c attributes.c
-	$(CC) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $^
 
 autoYacc: web.tab.c
-	$(CC) mainYacc.c tree.c web.yy.c web.tab.c $(LDLIBS) -o $@
+	$(CC) $(CFLAGS) mainYacc.c tree.c web.yy.c web.tab.c $(LDLIBS) -o $@
 
 web.tab.c: web.y
 	$(YACC) $<
