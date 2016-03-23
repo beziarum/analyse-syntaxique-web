@@ -4,8 +4,9 @@
 int yylex(void);
 void yyerror(char  *);
 %}
-%token			OPEN_BRACKET //{
-%token			CLOSE_BRACKET//}
+%token			OPEN_BRACKET // {
+%token			CLOSE_BRACKET// }
+%token			SLASH// /
 %token			TAG
 %union
 {
@@ -17,6 +18,12 @@ void yyerror(char  *);
 %type	<t>		NODE FOREST
 %%
 
+WEB:		FOREST
+		{
+		    display_tree($1);
+		    printf("\n");
+		}
+	;
 
 FOREST:		FOREST NODE
 		{
@@ -27,13 +34,15 @@ FOREST:		FOREST NODE
 			set_right($1,$2);
 			$$=$1;
 		    }
-		    display_tree($$);
-		printf("\n");
 		}
-	|	%empty
-		{
-		    $$=NULL;
-		}
+	|	NFOREST FOREST {$$=$2;}
+	|	FOREST NFOREST
+	|	OPEN_BRACKET FOREST CLOSE_BRACKET {$$=$2;}
+	|	NODE
+	;
+
+NFOREST:	NFOREST NFOREST
+	|	OPEN_BRACKET CLOSE_BRACKET
 	;
 
 NODE:		TAG OPEN_BRACKET FOREST CLOSE_BRACKET
@@ -45,8 +54,15 @@ NODE:		TAG OPEN_BRACKET FOREST CLOSE_BRACKET
 				   NULL,
 				   $FOREST,
 				   NULL);
-		    
-		    
 		}
-	|	OPEN_BRACKET CLOSE_BRACKET { $$=NULL;}
+	|	TAG SLASH
+		{
+		    $$=tree_create($TAG,
+				   true,
+				   false,
+				   TREE,
+				   NULL,
+				   NULL,
+				   NULL);
+		}
 	;

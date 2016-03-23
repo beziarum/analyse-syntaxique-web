@@ -19,7 +19,7 @@
 \] {printf("fermeture crochet : %s\n",yytext);}
 \{ {printf("[L] ouverture accolade : %s\n",yytext);return OPEN_BRACKET;}
 \} {printf("[L] fermeture accolade : %s\n",yytext);return CLOSE_BRACKET;}
-\/ {printf("slash : %s\n",yytext);}
+\/ {printf("slash : %s\n",yytext);return SLASH;}
 [:space:] {printf("espace : %s\n",yytext);}
 [:alpha:]+ {printf("mot : %s\n",yytext);}
 \" {printf("guillemet : %s\n",yytext);}
