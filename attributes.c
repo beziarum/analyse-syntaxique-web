@@ -42,3 +42,12 @@ void display_attributes(attributes attr, int i) {
     display_attributes(attr->next, i+1);
   }
 }
+
+
+void ajouter_suivant(attributes attr1, attributes attr2){
+  if(attr1->next == NULL)
+    attr1->next = attr2;
+  else
+    ajouter_suivant(attr1->next,attr2);
+}
+
