@@ -18,12 +18,17 @@ void yyerror(char  *);
 %%
 
 
-FOREST:		NODE FOREST
+FOREST:		FOREST NODE
 		{
-		    set_right($1,$2);
-		    $$=$1;
-		    display_tree($1,0,0);
-		    printf("test\n");
+		    if($1==NULL)
+			$$=$2;
+		    else
+		    {
+			set_right($1,$2);
+			$$=$1;
+		    }
+		    display_tree($$);
+		printf("\n");
 		}
 	|	%empty
 		{
