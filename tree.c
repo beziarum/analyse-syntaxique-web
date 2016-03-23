@@ -8,7 +8,7 @@ void display_tree_rec(tree t,int p);
 tree tree_create(char * label, bool nullary, bool space, enum type tp,  attributes attr, tree daughters, tree right){
   if ((tp == WORD) && (nullary == false))
     return NULL;
-  tree t = malloc(sizeof (struct tree_t));
+  tree t = malloc(sizeof (*t));
   t->label = label;
   t->nullary = nullary;
   t->space = space;
@@ -77,6 +77,25 @@ void set_enum(tree t,enum type tp){
     t->nullary = true;
 }
 
+
+void ajouter_frere(tree t,tree f){
+  if(t->right == NULL)
+    set_right(t,f);
+  else
+    ajouter_frere(t->right,f);
+}
+
+void ajouter_fils(tree t, tree f){
+  if (t->daughters == NULL)
+    set_daughters(t,f);
+  else
+    ajouter_frere(t->daughters,f);
+}
+
+
+
+
+
 /*void display_tree(tree t,int fils,int frere){
   if((fils == 0) && (frere==0))
     printf("racine de l'arbre ");
@@ -96,8 +115,8 @@ void display_tree_rec(tree t,int p){
   if(t == NULL)
     return;
   for(int i =0; i<p;i++)
-    printf("|");
-  printf(" %s\n",t->label);
+    printf("| ");
+  printf("%s\n",t->label);
   display_tree_rec(t->daughters,p+1);
   display_tree_rec(t->right,p);
 }
