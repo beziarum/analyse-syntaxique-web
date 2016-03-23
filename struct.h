@@ -41,4 +41,16 @@ bool get_space(tree t);
 void set_space (tree t,bool space);
 enum type get_enum(tree t);
 void set_enum(tree t,enum type tp);
-void display_tree(tree t,int fils,int frere);
+void display_tree(tree t);
+
+
+attributes attributes_create(char * key, char * value);
+char * get_attribute_key (attributes attr);
+void set_attribute_key (attributes attr, char * key);
+char * get_attribute_value (attributes attr);
+void set_attribute_value (attributes attr, char * value);
+attributes get_attribute_next (attributes attr);
+void set_attribute_next (attributes attr, attributes next);
+void display_attributes(attributes attr, int i);
+
+

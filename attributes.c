@@ -5,7 +5,7 @@
 
 attributes attributes_create(char * key, char * value)
 {
-  attributes attr = malloc(sizeof(attributes));
+  attributes attr = malloc(sizeof(struct attributes_t));
   attr->key = key;
   attr->value = value;
   attr->next = NULL;
