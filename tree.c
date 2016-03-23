@@ -8,7 +8,7 @@ void display_tree_rec(tree t,int p);
 tree tree_create(char * label, bool nullary, bool space, enum type tp,  attributes attr, tree daughters, tree right){
   if ((tp == WORD) && (nullary == false))
     return NULL;
-  tree t = malloc(sizeof (struct tree_t));
+  tree t = malloc(sizeof (*t));
   t->label = label;
   t->nullary = nullary;
   t->space = space;
