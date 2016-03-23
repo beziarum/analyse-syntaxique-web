@@ -36,19 +36,17 @@ FOREST:		FOREST NODE
 		}
 	;
 
-NODE:		TAG OPEN_BRACKET CLOSE_BRACKET
+NODE:		TAG OPEN_BRACKET FOREST CLOSE_BRACKET
 		{
-		    $$=tree_create($1,
+		    $$=tree_create($TAG,
 				   false,
 				   false,
 				   TREE,
 				   NULL,
-				   NULL,
+				   $FOREST,
 				   NULL);
 		    
 		    
 		}
-	;
-
-NNODE:		OPEN_BRACKET CLOSE_BRACKET
+	|	OPEN_BRACKET CLOSE_BRACKET { $$=NULL;}
 	;
