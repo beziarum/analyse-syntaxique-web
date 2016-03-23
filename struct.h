@@ -42,6 +42,8 @@ void set_space (tree t,bool space);
 enum type get_enum(tree t);
 void set_enum(tree t,enum type tp);
 void display_tree(tree t);
+void ajouter_frere(tree t,tree f);
+void ajouter_fils(tree t, tree f);
 
 
 attributes attributes_create(char * key, char * value);
