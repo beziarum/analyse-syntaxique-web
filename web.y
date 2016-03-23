@@ -31,7 +31,7 @@ FOREST:		FOREST NODE
 			$$=$2;
 		    else
 		    {
-			set_right($1,$2);
+			ajouter_frere($1,$2);
 			$$=$1;
 		    }
 		}
