@@ -15,17 +15,17 @@ void yyerror(char  *);
 }
 
 %type	<txt>		TAG
-%type	<t>		NODE FOREST
+%type	<t>		node forest
 %%
 
-WEB:		FOREST
+web:		forest
 		{
 		    display_tree($1);
 		    printf("\n");
 		}
 	;
 
-FOREST:		FOREST NODE
+forest:		forest node
 		{
 		    if($1==NULL)
 			$$=$2;
@@ -35,24 +35,24 @@ FOREST:		FOREST NODE
 			$$=$1;
 		    }
 		}
-	|	NFOREST FOREST {$$=$2;}
-	|	FOREST NFOREST
-	|	OPEN_BRACKET FOREST CLOSE_BRACKET {$$=$2;}
-	|	NODE
+	|	nforest forest {$$=$2;}
+	|	forest nforest
+	|	OPEN_BRACKET forest CLOSE_BRACKET {$$=$2;}
+	|	node
 	;
 
-NFOREST:	NFOREST NFOREST
+nforest:	nforest nforest
 	|	OPEN_BRACKET CLOSE_BRACKET
 	;
 
-NODE:		TAG OPEN_BRACKET FOREST CLOSE_BRACKET
+node:		TAG OPEN_BRACKET forest CLOSE_BRACKET
 		{
 		    $$=tree_create($TAG,
 				   false,
 				   false,
 				   TREE,
 				   NULL,
-				   $FOREST,
+				   $forest,
 				   NULL);
 		}
 	|	TAG SLASH
