@@ -20,8 +20,8 @@ web.yy.c: web.l web.tab.h
 autoStruct: struct.h main.c tree.c attributes.c
 	$(CC) $(CFLAGS) -o $@ $^
 
-autoYacc: web.tab.c web.yy.c
-	$(CC) $(CFLAGS) mainYacc.c tree.c web.yy.c web.tab.c $(LDLIBS) -o $@
+autoYacc: web.tab.c web.yy.c struct.h
+	$(CC) $(CFLAGS) mainYacc.c tree.c attributes.c web.yy.c web.tab.c $(LDLIBS) -o $@
 
 web.tab.c web.tab.h: web.y
 	$(YACC) $<
