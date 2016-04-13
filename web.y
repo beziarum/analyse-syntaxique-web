@@ -15,8 +15,11 @@ void yyerror(char  *);
 %token			COMMA        // ,
 %token			DQUOTE       // "
 %token			EQUAL        // =
+%token			SPACES
 %token			TAG
 %token			ALNUMSUITE
+%token			TXTWORD
+%token			TXTEWORD
 %union
 {
     tree t;
@@ -24,13 +27,14 @@ void yyerror(char  *);
     char* txt;
 }
 
-%type	<txt>		TAG word lword string ALNUMSUITE
-%type	<t>		node forest
+%type	<txt>		TAG ALNUMSUITE TXTWORD
+%type	<t>		node forest word lword string
 %type	<a>		attribut lattributs flattributs
 %%
 
 web:		forest
 		{
+		    printf("--------------------------------\n");
 		    display_tree($1);
 		    printf("\n");
 		}
@@ -45,11 +49,19 @@ forest:		forest node
 			ajouter_frere($1,$2);
 			$$=$1;
 		    }
+		    display_tree($node);
+		    printf("\n");
 		}
 	|	nforest forest {$$=$2;}
 	|	forest nforest
+	|	string
 	|	OPEN_BRACES forest CLOSE_BRACES {$$=$2;}
 	|	node
+		{
+		    display_tree($node);
+		    printf("\n");
+		    $$=$node;
+		}
 	;
 
 nforest:	nforest nforest
@@ -80,29 +92,20 @@ attribut:	TAG EQUAL string
 string:		DQUOTE lword DQUOTE {$$=$lword;}
 	;
 
-lword:		lword word
+lword:		lword[lw1] word
 		{
 		if($1==NULL)
 		  $$=$2;
 		else
 		{
-		  int size1=strlen($1);
-		  int size2=strlen($2);
-		  $1=realloc($1,size1+size2+1);
-		  strcpy($1+size2,$2);
-		  free($word);
-		  $$=$1;
+		    ajouter_frere($lw1,$word);
 		}
 		}
-	|	%empty {
-		char* c=malloc(sizeof(*c));
-		*c='\n';
-		$$=c ;
-		}
+	|	%empty { $$=NULL;}
 	;
 
-word:		TAG
-	|	ALNUMSUITE
+word:		TXTWORD {printf("nesp\n");$$=tree_create($TXTWORD,true,false,WORD,NULL,NULL,NULL);}
+	|	TXTWORD SPACES {printf("eps\n");$$=tree_create($TXTWORD,true,true,WORD,NULL,NULL,NULL);}
 	;
 
 node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
