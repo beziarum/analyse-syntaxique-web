@@ -40,16 +40,16 @@ web:		forest
 		}
 	;
 
-forest:		forest node
+forest:		forest[f1] node[f2]
 		{
-		    if($1==NULL)
-			$$=$2;
+		    if($f1==NULL)
+			$$=$f2;
 		    else
 		    {
-			ajouter_frere($1,$2);
-			$$=$1;
+			ajouter_frere($f1,$f2);
+			$$=$f1;
 		    }
-		    display_tree($node);
+		    display_tree($f2);
 		    printf("\n");
 		}
 	|	nforest forest {$$=$2;}
