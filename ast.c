@@ -108,3 +108,17 @@ struct ast * mk_declrec(char * id, struct ast * body){
     e->node->fun->body=body;
     return e;
 }
+
+void display_tree(struct tree t){
+  display_tree_rec(t,1);
+}
+
+void display_tree_rec(struct tree t,int p){
+  if(t == NULL)
+    return;
+  for(int i =0; i<p;i++)
+    printf("| ");
+  printf("%s\n",t->label);
+  display_tree_rec(t->daughters,p+1);
+  display_tree_rec(t->right,p);
+}
