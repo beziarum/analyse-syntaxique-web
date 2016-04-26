@@ -15,10 +15,10 @@
 <TXT>\" {printf("guillemet : %s\n",yytext);BEGIN INITIAL;return DQUOTE;}
 <TXT>[^[:space:]"]+ {printf("mot : %s\n",yytext);yylval.txt=strdup(yytext);return TXTWORD;}//"
 
-[xX][mM][lL][[:alpha:]]* {
+[xX][mM][lL]([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+) {
  printf("world : %s\n",yytext);
  yylval.txt=strdup(yytext);
- return ALNUMSUITE;
+ return NAME;
  }
 ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+) {
  printf("[L] etiquette valide : %s\n",yytext);
@@ -35,5 +35,6 @@
 \= {printf("egal : %s\n",yytext);return EQUAL;}
 \,  {printf("comma : %s\n",yytext);return COMMA;}
 <INITIAL>\" {printf("guillemet : %s\n",yytext);BEGIN TXT;return DQUOTE;}
+\; {printf("semicolon : %s\n",yytext);return SEMICOLON;}
 
 %%
