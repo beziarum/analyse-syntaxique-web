@@ -35,7 +35,7 @@ void yyerror(char  *);
 %type <attr> attribut lattributs flattributs
 %%
 
-web:		SPACES forest SPACES
+web:		space forest space
 		{
 		    printf("--------------------------------\n");
 		    //display_tree($2);
@@ -43,7 +43,7 @@ web:		SPACES forest SPACES
 		}
 	;
 
-forest:		forest[f1] SPACES node[f2]
+forest:		forest[f1] space node[f2]
 		{
 		    if($f1==NULL)
 			$$=$f2;
@@ -55,10 +55,10 @@ forest:		forest[f1] SPACES node[f2]
 		    //display_tree($f2);
 		    printf("\n");
 		}
-	|	nforest SPACES forest {$$=$3;}
-	|	forest SPACES  nforest
+	|	nforest space forest {$$=$3;}
+	|	forest space  nforest
 	|	string
-	|	OPEN_BRACES SPACES forest SPACES  CLOSE_BRACES {$$=$3;}
+	|	OPEN_BRACES space forest space  CLOSE_BRACES {$$=$3;}
 	|	node
 		{
 		    //display_tree($node);
@@ -67,23 +67,23 @@ forest:		forest[f1] SPACES node[f2]
 		}
 	;
 
-nforest:	nforest SPACES  nforest
-	|	OPEN_BRACES SPACES  CLOSE_BRACES
+nforest:	nforest space  nforest
+	|	OPEN_BRACES space  CLOSE_BRACES
 	;
 
-flattributs:	OPEN_BRACKET SPACES  lattributs SPACES  CLOSE_BRACKET
+flattributs:	OPEN_BRACKET space  lattributs space  CLOSE_BRACKET
 		{
 		  $$=$lattributs;
 		}
 	;
 
-lattributs:	attribut SPACES  COMMA SPACES  lattributs
+lattributs:	attribut space  COMMA space  lattributs
 		{
 
 		$1->next = $5;
 		}
 	|	attribut
-		  
+
 	;
 
 attribut:	TAG EQUAL string
@@ -108,10 +108,10 @@ lword:		lword[lw1] word
 	;
 
 word:		TXTWORD {printf("nesp\n");$$=mk_word($1);}
-		|	TXTWORD SPACES {printf("eps\n");$$=mk_tree("",true,false,true,NULL,mk_word($1));}
+		|	TXTWORD space {printf("eps\n");$$=mk_tree("",true,false,true,NULL,mk_word($1));}
 		;
 
-node:		TAG flattributs SPACES  OPEN_BRACES SPACES  forest SPACES  CLOSE_BRACES
+node:		TAG flattributs space  OPEN_BRACES space  forest space  CLOSE_BRACES
 		{
 		    $$=mk_tree($TAG,
 			       false,
@@ -120,7 +120,7 @@ node:		TAG flattributs SPACES  OPEN_BRACES SPACES  forest SPACES  CLOSE_BRACES
 			       $flattributs,
 			       $forest);
 		}
-	|	TAG OPEN_BRACES SPACES  forest SPACES  CLOSE_BRACES
+	|	TAG OPEN_BRACES space  forest space  CLOSE_BRACES
 		{
 		    $$=mk_tree($TAG,
 			       false,
@@ -137,7 +137,7 @@ node:		TAG flattributs SPACES  OPEN_BRACES SPACES  forest SPACES  CLOSE_BRACES
 			       false,
 			       NULL,
 			       NULL);
-		}    
+		}
 	|	TAG flattributs SLASH
 		{
 		    $$=mk_tree($TAG,
@@ -148,3 +148,7 @@ node:		TAG flattributs SPACES  OPEN_BRACES SPACES  forest SPACES  CLOSE_BRACES
 			       NULL);
 		}
 	;
+
+space : SPACES
+		|%empty {printf("tamere\n");}
+		;
