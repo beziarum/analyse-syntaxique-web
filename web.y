@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "ast.h"
+#define YYDEBUG 1
 int yylex(void);
 void yyerror(char  *);
 %}
@@ -33,6 +34,8 @@ void yyerror(char  *);
 %type	<txt>		TAG ALNUMSUITE TXTWORD
 %type <ast>  node forest word lword string
 %type <attr> attribut lattributs flattributs
+%debug
+
 %%
 
 web:		space forest space
@@ -57,9 +60,22 @@ forest:		forest[f1] space forest[f2]
 		    //display_tree($f2);
 		    printf("\n");
 		}
+	/*|	forest[f1] space string[f2]
+			{
+			    if($f1==NULL)
+				$$=$f2;
+			    else
+			    {
+					mk_forest(false,$f1,$f2);
+				$$=$f1;
+			    }
+			    //display_tree($f2);
+			    printf("\n");
+			}*/
 	|	nforest space forest {$$=$3;}
 	|	forest space  nforest
 	|	string
+	|	forest CLOSE_BRACES
 	|	OPEN_BRACES space forest space  CLOSE_BRACES {$$=$3;}
 	|	node
 		{
@@ -106,11 +122,12 @@ lword:		lword[lw1] word
 		  mk_forest(true,$lw1,$word);
 		}
 		}
-	|	%empty { $$=NULL;}
+	|	space { $$=NULL;}
 	;
 
-word:		TXTWORD {printf("nesp\n");$$=mk_word($1);}
-		|	TXTWORD SPACES {printf("eps\n");$$=mk_tree("",true,false,true,NULL,mk_word($1));}
+word:
+			TXTWORD SPACES {printf("eps\n");$$=mk_tree("",true,false,true,NULL,mk_word($1));}
+		|	TXTWORD {printf("nesp\n");$$=mk_word($1);}
 		;
 
 node:		TAG flattributs space  OPEN_BRACES space  forest space  CLOSE_BRACES
