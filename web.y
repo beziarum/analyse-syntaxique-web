@@ -32,7 +32,7 @@ void yyerror(char  *);
 %type	<a>		attribut lattributs flattributs
 %%
 
-web:		forest
+web:		SPACES forest SPACES
 		{
 		    printf("--------------------------------\n");
 		    display_tree($1);
@@ -40,7 +40,7 @@ web:		forest
 		}
 	;
 
-forest:		forest[f1] node[f2]
+forest:		forest[f1] SPACES node[f2]
 		{
 		    if($f1==NULL)
 			$$=$f2;
@@ -52,10 +52,10 @@ forest:		forest[f1] node[f2]
 		    display_tree($f2);
 		    printf("\n");
 		}
-	|	nforest forest {$$=$2;}
-	|	forest nforest
+	|	nforest SPACES forest {$$=$2;}
+	|	forest SPACES  nforest
 	|	string
-	|	OPEN_BRACES forest CLOSE_BRACES {$$=$2;}
+	|	OPEN_BRACES SPACES forest SPACES  CLOSE_BRACES {$$=$2;}
 	|	node
 		{
 		    display_tree($node);
@@ -64,18 +64,17 @@ forest:		forest[f1] node[f2]
 		}
 	;
 
-nforest:	nforest nforest
-	|	OPEN_BRACES CLOSE_BRACES
+nforest:	nforest SPACES  nforest
+	|	OPEN_BRACES SPACES  CLOSE_BRACES
 	;
 
-flattributs:	OPEN_BRACKET lattributs CLOSE_BRACKET
+flattributs:	OPEN_BRACKET SPACES  lattributs SPACES  CLOSE_BRACKET
 		{
 		  $$=$lattributs;
 		}
-	|	%empty {$$=NULL;}
 	;
 
-lattributs:	lattributs COMMA attribut
+lattributs:	lattributs SPACES  COMMA SPACES  attribut
 		{
 		  ajouter_suivant($1,$3);
 		}
@@ -108,7 +107,7 @@ word:		TXTWORD {printf("nesp\n");$$=tree_create($TXTWORD,true,false,WORD,NULL,NU
 	|	TXTWORD SPACES {printf("eps\n");$$=tree_create($TXTWORD,true,true,WORD,NULL,NULL,NULL);}
 	;
 
-node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
+node:		TAG flattributs SPACES  OPEN_BRACES SPACES  forest SPACES  CLOSE_BRACES
 		{
 		    $$=tree_create($TAG,
 				   false,
@@ -118,6 +117,17 @@ node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
 				   $forest,
 				   NULL);
 		}
+        |	TAG   OPEN_BRACES SPACES forest SPACES  CLOSE_BRACES
+		{
+		    $$=tree_create($TAG,
+				   false,
+				   false,
+				   TREE,
+				   NULL,
+				   $forest,
+				   NULL);
+		}
+
 	|	TAG flattributs SLASH
 		{
 		    $$=tree_create($TAG,
@@ -125,6 +135,17 @@ node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
 				   false,
 				   TREE,
 				   $flattributs,
+				   NULL,
+				   NULL);
+		}
+
+	|	TAG   SLASH
+		{
+		    $$=tree_create($TAG,
+				   true,
+				   false,
+				   TREE,
+				   NULL,
 				   NULL,
 				   NULL);
 		}
