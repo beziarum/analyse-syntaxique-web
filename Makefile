@@ -7,7 +7,6 @@ CFLAGS=-std=c99 -Wall -Wpedantic
 
 all: autoYacc
 
-
 autoLex: web.yy.c
 	gcc $< -lfl -o $@
 
@@ -24,3 +23,6 @@ autoYacc: web.tab.c web.yy.c struct.h
 
 web.tab.c web.tab.h: web.y
 	$(YACC) $<
+
+clean :
+	rm autoYacc web.yy.c web.tab.h web.tab.c web.output *.o
