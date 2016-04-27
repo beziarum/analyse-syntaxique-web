@@ -26,11 +26,7 @@ enum binop{PLUS, MINUS, MULT, DIV, LEQ, LE, GEQ, GE, EQ, NEQ,OR, AND,EMIT};
 
 enum unaryop {NOT,NEG};
 
-struct ast{
-    enum  ast_type type;
-    union node * node;
-};
-
+struct ast;
 
 
 struct app{
@@ -104,6 +100,10 @@ union node{
     struct cond * cond;
 };
 
+struct ast{
+    enum  ast_type type;
+    union node * node;
+};
 
 struct ast * mk_node(void);
 struct ast * mk_integer(int n);
@@ -122,4 +122,5 @@ struct ast * mk_cond(struct ast * cond, struct ast * then_br, struct ast * else_
 struct ast * mk_declrec(char * id, struct ast * body);
 void display_tree(struct tree *t);
 void display_tree_rec(struct tree *t,int p);
+struct attributes * mk_attributes(struct ast * key, struct ast * value, struct attributes * next);
 #endif
