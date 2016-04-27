@@ -7,10 +7,38 @@
 
 
 void emit( char * file, struct ast * ast){
-    assert(file!=NULL && (ast ==NULL || ast!= NULL));
-    fprintf(stderr,"Vous devez implémenter la fonction emit");
-    return;
+    assert(file!=NULL);
+    int fd=open(file,O_WRONLY,0666);
+    emitfd(fd,ast);
+    close(fd);
 }
+void emitfd( int fd,struct ast * ast){
+    if(ast->type == WORD)
+	fprintf(fd,"%s",ast->node->str);
+    else if(ast->type == FOREST)
+    {
+	emitfd(fd,ast->node->forest->head);
+	emitfd(fd,ast->node->forest->tail);
+    }
+    else if(ast->type == FOREST)
+    {
+	if(strcmp(ast->node->tree->label,"") == 0);
+	else if(ast->node->tree->nullary)
+	    fprintf(fd,"%s/\n",ast->node->tree->label);
+	else
+	{
+	    fprintf(fd,"<%s>\n",ast->node->tree->label);
+	    emitfd(fd,ast->node->tree->daugther);
+	    if(ast->node->tree->space)
+		fprintf(fd," ");
+	    fprintf(fd,"</%s>\n",ast->node->tree->label);
+	}
+    }
+    else
+	fprintf(stderr,"Dafuck");
+
+}
+
 
 struct env * mk_env(char * var, struct closure * value, struct env * next){
     struct env * res = malloc(sizeof(struct env));
