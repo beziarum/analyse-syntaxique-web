@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "struct.h"    
+#include "ast.h"
 int yylex(void);
 void yyerror(char  *);
 %}
@@ -22,8 +22,8 @@ void yyerror(char  *);
 %token			TXTEWORD
 %union
 {
-    tree t;
-    attributes a;
+    struct tree * t;
+    struct attributes * a;
     char* txt;
 }
 
@@ -40,16 +40,16 @@ web:		forest
 		}
 	;
 
-forest:		forest node
+forest:		forest[f1] node[f2]
 		{
-		    if($1==NULL)
-			$$=$2;
+		    if($f1==NULL)
+			$$=$f2;
 		    else
 		    {
-			ajouter_frere($1,$2);
-			$$=$1;
+			//ajouter_frere($f1,$f2); a virer
+			$$=$f1;
 		    }
-		    display_tree($node);
+		    display_tree($f2);
 		    printf("\n");
 		}
 	|	nforest forest {$$=$2;}
@@ -77,15 +77,16 @@ flattributs:	OPEN_BRACKET lattributs CLOSE_BRACKET
 
 lattributs:	lattributs COMMA attribut
 		{
-		  ajouter_suivant($1,$3);
+		  /*ajouter_suivant($1,$3);*/
+      $1->next = $3;
 		}
 	|	attribut
-		  
+
 	;
 
 attribut:	TAG EQUAL string
 		{
-		  $$=attributes_create($TAG,$string);
+		//  $$=attributes_create($TAG,$string); a changer
 		}
 	;
 
@@ -98,34 +99,43 @@ lword:		lword[lw1] word
 		  $$=$2;
 		else
 		{
-		    ajouter_frere($lw1,$word);
+		  //  ajouter_frere($lw1,$word);
 		}
 		}
 	|	%empty { $$=NULL;}
 	;
 
-word:		TXTWORD {printf("nesp\n");$$=tree_create($TXTWORD,true,false,WORD,NULL,NULL,NULL);}
-	|	TXTWORD SPACES {printf("eps\n");$$=tree_create($TXTWORD,true,true,WORD,NULL,NULL,NULL);}
+word:		TXTWORD {printf("nesp\n");$$=mk_tree($TXTWORD,false,false,false,NULL,NULL);}
+	|	TXTWORD SPACES {printf("eps\n");$$=mk_tree($TXTWORD,false,false,true,NULL,NULL);}
 	;
 
 node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
-		{
-		    $$=tree_create($TAG,
+		/*{
+		    $$=mk_tree($TAG,
 				   false,
 				   false,
 				   TREE,
 				   $flattributs,
 				   $forest,
 				   NULL);
-		}
+		}*/
+
+    {
+      $$ = mk_tree($TAG,      // erreur : mk_tree renvoie un ast
+				   false,
+				   false,
+				   false,
+				   $flattributs,
+				   NULL);  // a changer (ast daughters)
+    }
+
 	|	TAG flattributs SLASH
 		{
-		    $$=tree_create($TAG,
-				   true,
+		    $$=mk_tree($TAG,
 				   false,
-				   TREE,
+				   false,
+				   false,
 				   $flattributs,
-				   NULL,
 				   NULL);
 		}
 	;

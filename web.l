@@ -2,7 +2,7 @@
 #define _XOPEN_SOURCE 700
 #include <string.h>
 
-#include "struct.h"
+#include "ast.h"
 #include "web.tab.h"
 
 

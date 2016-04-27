@@ -55,4 +55,3 @@ attributes get_attribute_next (attributes attr);
 void set_attribute_next (attributes attr, attributes next);
 void display_attributes(attributes attr, int i);
 void ajouter_suivant(attributes attr1, attributes attr2);
-
