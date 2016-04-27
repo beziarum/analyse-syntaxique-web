@@ -46,7 +46,7 @@ forest:		forest[f1] node[f2]
 			$$=$f2;
 		    else
 		    {
-			//ajouter_frere($f1,$f2); a virer
+				mk_forest(false,$f1,$f2); a virer
 			$$=$f1;
 		    }
 		    display_tree($f2);
@@ -75,9 +75,8 @@ flattributs:	OPEN_BRACKET lattributs CLOSE_BRACKET
 	|	%empty {$$=NULL;}
 	;
 
-lattributs:	lattributs COMMA attribut
+lattributs:	attribut COMMA lattributs
 		{
-		  /*ajouter_suivant($1,$3);*/
       $1->next = $3;
 		}
 	|	attribut
@@ -86,7 +85,7 @@ lattributs:	lattributs COMMA attribut
 
 attribut:	TAG EQUAL string
 		{
-		//  $$=attributes_create($TAG,$string); a changer
+		  $$=mk_attributes(mk_word($1),$string,NULL);
 		}
 	;
 
@@ -99,14 +98,14 @@ lword:		lword[lw1] word
 		  $$=$2;
 		else
 		{
-		  //  ajouter_frere($lw1,$word);
+		  mk_forest(true,$lw1,$word);
 		}
 		}
 	|	%empty { $$=NULL;}
 	;
 
-word:		TXTWORD {printf("nesp\n");$$=mk_tree($TXTWORD,false,true,false,NULL,NULL);}
-		|	TXTWORD SPACES {printf("eps\n");$$=mk_tree($TXTWORD,false,false,true,NULL,NULL);}
+word:		TXTWORD {printf("nesp\n");$$=mk_word($1);}
+		|	TXTWORD SPACES {printf("eps\n");$$=mk_tree("",true,false,true,NULL,mk_word($1));}
 		;
 
 node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
@@ -136,7 +135,7 @@ node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
 		{
 		    $$=mk_tree($TAG,
 				   false,
-				   false,
+				   true,
 				   false,
 				   $flattributs,
 				   NULL);

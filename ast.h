@@ -89,7 +89,7 @@ union node{
     enum binop binop;
     enum unaryop unaryop;
     char * str;  // peut représenter ou bien une variable ou encore un mot
-    struct path * chemin; 
+    struct path * chemin;
     struct app * app;
     struct tree * tree;
     struct forest * forest;
@@ -111,7 +111,7 @@ struct ast * mk_var(char * var);
 struct ast * mk_import(struct path * chemin);
 struct ast * mk_app(struct ast * fun, struct ast * arg);
 struct ast * mk_word(char * str);
-struct ast * mk_tree(char * label, bool is_value, bool nullary, bool space, 
+struct ast * mk_tree(char * label, bool is_value, bool nullary, bool space,
                      struct attributes * att, struct ast * daughters);
 struct ast * mk_forest(bool is_value, struct ast * head, struct ast * tail);
 struct ast * mk_fun(char * id, struct ast * body);
@@ -120,4 +120,5 @@ struct ast * mk_cond(struct ast * cond, struct ast * then_br, struct ast * else_
 struct ast * mk_declrec(char * id, struct ast * body);
 void display_tree(struct tree *t);
 void display_tree_rec(struct tree *t,int p);
+struct attributes * mk_attributes(struct ast * key, struct ast * value, struct attributes * next);
 #endif

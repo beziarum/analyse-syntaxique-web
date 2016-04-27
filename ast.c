@@ -109,6 +109,14 @@ struct ast * mk_declrec(char * id, struct ast * body){
     return e;
 }
 
+struct attributes * mk_attributes(struct ast * key, struct ast * value, struct attributes * next) {
+    struct attributes *a = malloc(sizeof (struct attributes));
+    a->key = key;
+    a->value = value;
+    a->next = next;
+    return a;
+}
+
 void display_tree(struct tree t){
   display_tree_rec(t,1);
 }
