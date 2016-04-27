@@ -3,7 +3,7 @@ YACC=bison -d -v
 CC=gcc
 
 LDLIBS=-lfl -ly
-CFLAGS=-std=c99 -Wall -Wpedantic
+CFLAGS=-std=c99 -Wall -Wpedantic -D_XOPEN_SOURCE=700
 
 all: web
 

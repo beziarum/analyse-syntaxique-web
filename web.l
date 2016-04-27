@@ -15,6 +15,10 @@
 <TXT>\" {printf("guillemet : %s\n",yytext);BEGIN INITIAL;return DQUOTE;}
 <TXT>[^[:space:]"]+ {printf("mot : %s\n",yytext);yylval.txt=strdup(yytext);return TXTWORD;}//"
 
+
+let {return LET;}
+
+
 [xX][mM][lL]([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+) {
  printf("world : %s\n",yytext);
  yylval.txt=strdup(yytext);
@@ -30,8 +34,8 @@
 \{ {printf("[L] ouverture accolade : %s\n",yytext);return OPEN_BRACES;}
 \} {printf("[L] fermeture accolade : %s\n",yytext);return CLOSE_BRACES;}
 \/ {printf("slash : %s\n",yytext);return SLASH;}
+\n {return EOL;}
 [[:space:]]+ {printf("espaces : %s\n",yytext); return SPACES;}
-[[:alpha:]]+ {printf("mot : %s\n",yytext);}
 \= {printf("egal : %s\n",yytext);return EQUAL;}
 \,  {printf("comma : %s\n",yytext);return COMMA;}
 <INITIAL>\" {printf("guillemet : %s\n",yytext);BEGIN TXT;return DQUOTE;}

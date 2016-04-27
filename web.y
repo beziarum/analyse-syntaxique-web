@@ -6,6 +6,10 @@
 #include "struct.h"    
 int yylex(void);
 void yyerror(char  *);
+
+
+extern struct env* e;
+
 %}
 %token			OPEN_BRACES  // {
 %token			CLOSE_BRACES // }
@@ -15,11 +19,17 @@ void yyerror(char  *);
 %token			COMMA        // ,
 %token			DQUOTE       // "
 %token			EQUAL        // =
+%token			SEMICOLON    // ;
+%token			EOL          // \n
 %token			SPACES
+%token			NAME
 %token			TAG
 %token			ALNUMSUITE
 %token			TXTWORD
 %token			TXTEWORD
+
+%token			LET
+
 %union
 {
     tree t;
@@ -27,15 +37,16 @@ void yyerror(char  *);
     char* txt;
 }
 
-%type	<txt>		TAG ALNUMSUITE TXTWORD
+
+%type	<txt>		TAG ALNUMSUITE TXTWORD NAME name
 %type	<t>		node forest word lword string
 %type	<a>		attribut lattributs flattributs
 %%
 
-web:		forest
+web:		blet forest
 		{
 		    printf("--------------------------------\n");
-		    display_tree($1);
+		    display_tree($forest);
 		    printf("\n");
 		}
 	;
@@ -128,4 +139,17 @@ node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
 				   NULL,
 				   NULL);
 		}
+	;
+
+name:		NAME
+	|	TAG
+	;
+let:		LET SPACES name SPACES EQUAL node SEMICOLON
+		{
+		    e=process_binding_instruction($name,$node,e);
+		}
+	;
+
+blet:		let EOL blet
+	|	%empty
 	;
