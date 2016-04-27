@@ -5,9 +5,8 @@ CC=gcc
 LDLIBS=-lfl -ly
 CFLAGS=-std=c99 -Wall -Wpedantic
 
-all: web
+all: autoYacc
 
-web: autoYacc
 
 autoLex: web.yy.c
 	gcc $< -lfl -o $@
