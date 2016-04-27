@@ -27,6 +27,7 @@ extern struct env* e;
 %token			ALNUMSUITE
 %token			TXTWORD
 %token			TXTEWORD
+%token			BINARYOP
 
 %token			LET
 
@@ -35,12 +36,14 @@ extern struct env* e;
     tree t;
     attributes a;
     char* txt;
+    struct ast* ast;
 }
 
 
-%type	<txt>		TAG ALNUMSUITE TXTWORD NAME name
+%type	<txt>		TAG ALNUMSUITE TXTWORD NAME name BINARYOP
 %type	<t>		node forest word lword string
 %type	<a>		attribut lattributs flattributs
+%type	<ast>		app
 %%
 
 web:		blet forest
@@ -152,4 +155,14 @@ let:		LET SPACES name SPACES EQUAL node SEMICOLON
 
 blet:		let EOL blet
 	|	%empty
+	;
+
+app:		app node
+		{
+		   $$=mk_app($app,$node);
+		}
+	|	BINARYOP node
+		{
+		    $$=mk_app($BINARYOP,$node);
+		}
 	;

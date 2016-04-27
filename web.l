@@ -17,7 +17,8 @@
 
 
 let {return LET;}
-
+emit {yylval.txt=strdup(yytext); return BINARYOP;}
+[+-*/] {yylval.txt=strdup(yytext); return BINARYOP;}
 
 [xX][mM][lL]([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+) {
  printf("world : %s\n",yytext);
