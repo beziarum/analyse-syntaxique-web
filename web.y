@@ -79,10 +79,10 @@ flattributs:	OPEN_BRACKET space  lattributs space  CLOSE_BRACKET
 		}
 	;
 
-lattributs:	attribut space  COMMA space  lattributs
+lattributs:	attribut SPACES  lattributs
 		{
 
-		$1->next = $5;
+		$1->next = $3;
 		}
 	|	attribut
 
