@@ -289,7 +289,6 @@ void reconstruct_forest(struct machine * m, struct ast * tail){
             break;
         }   
         default: {
-            fprintf(stderr,"reconstruct_forest_error: %s",print_type(tp));
             exit(1);
         }   
         }
@@ -399,7 +398,6 @@ void pop_cond(struct machine * m){
 }
 
 void pop_forestcomptail(struct machine * m){
-    printf("START: pop_forestcomptail\n");
     enum ast_type tp = get_ast_type(m->closure->value);
     struct ast * forest;
     switch(tp){
@@ -425,7 +423,6 @@ void pop_forestcomptail(struct machine * m){
     m->closure = mk_closure(clone_concat_forest(m->stack->top->item->closure->value,forest),NULL);
     pop_stack(m);
     compute(m);
-    printf("END: pop_forestcomptail\n");
 }
 
 void pop_treecompforest(struct machine * m){
@@ -452,10 +449,6 @@ void pop_treecompforest(struct machine * m){
         fprintf(stderr,"Erreur de typage: un forêt ne peut être construite qu'à partir d'une forêt, d'un arbre, d'un mot ou d'un entier");
         exit(1);
     }
-    if(m->stack->top->item->tree_forest->attributes==NULL){
-        printf("NULL\n");
-    }
-    else{printf("not NULL\n");}
     m->closure = mk_closure(mk_tree(
         m->stack->top->item->tree_forest->label,
         true,
