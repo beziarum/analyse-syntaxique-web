@@ -3,7 +3,6 @@
 #include <string.h>
 #include <assert.h>
 #include "machine.h"
-#include "printer.h"
 #include "pattern_matching.h"
 
 
@@ -336,12 +335,6 @@ bool match(struct patterns * patterns, struct ast * ast, struct ast ** res, stru
     else{
         struct env * res_env = NULL;
         if(match_aux(patterns->pattern, ast,&res_env)){
-            printf("MATCH\n");
-            print_ast(ast);
-            printf("\n");
-            print_pattern(patterns->pattern);
-            printf("\n");
-            printf("END MATCH \n");
             concat_env(res_env, *e);
             *e=res_env;
             *res = patterns->res;
