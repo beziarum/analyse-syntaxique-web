@@ -80,7 +80,7 @@ flattributs:	OPEN_BRACKET SPACES  lattributs SPACES  CLOSE_BRACKET
 lattributs:	attribut SPACES  COMMA SPACES  lattributs
 		{
 
-      $1->next = $3;
+		$1->next = $5;
 		}
 	|	attribut
 		  
@@ -113,22 +113,38 @@ word:		TXTWORD {printf("nesp\n");$$=mk_word($1);}
 
 node:		TAG flattributs SPACES  OPEN_BRACES SPACES  forest SPACES  CLOSE_BRACES
 		{
-		    $$=tree_create($TAG,
-				   false,
-				   false,
-				   TREE,
-				   $flattributs,
-				   $forest,
-				   NULL);
+		    $$=mk_tree($TAG,
+			       false,
+			       false,
+			       false,
+			       $flattributs,
+			       $forest);
 		}
+	|	TAG OPEN_BRACES SPACES  forest SPACES  CLOSE_BRACES
+		{
+		    $$=mk_tree($TAG,
+			       false,
+			       false,
+			       false,
+			       NULL,
+			       $forest);
+		}
+	|	TAG SLASH
+	        {
+		    $$=mk_tree($TAG,
+			       false,
+			       true,
+			       false,
+			       NULL,
+			       NULL);
+		}    
 	|	TAG flattributs SLASH
 		{
-		    $$=tree_create($TAG,
-				   true,
-				   false,
-				   TREE,
-				   $flattributs,
-				   NULL,
-				   NULL);
+		    $$=mk_tree($TAG,
+			       false,
+			       true,
+			       false,
+			       $flattributs,
+			       NULL);
 		}
 	;
