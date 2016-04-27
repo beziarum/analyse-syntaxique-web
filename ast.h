@@ -26,7 +26,11 @@ enum binop{PLUS, MINUS, MULT, DIV, LEQ, LE, GEQ, GE, EQ, NEQ,OR, AND,EMIT};
 
 enum unaryop {NOT,NEG};
 
-struct ast;
+struct ast{
+    enum  ast_type type;
+    union node * node;
+};
+
 
 
 struct app{
@@ -84,12 +88,14 @@ struct declrec{
 };
 
 
+
+
 union node{
     int num;
     enum binop binop;
     enum unaryop unaryop;
     char * str;  // peut représenter ou bien une variable ou encore un mot
-    struct path * chemin; 
+    struct path * chemin;
     struct app * app;
     struct tree * tree;
     struct forest * forest;
@@ -98,10 +104,6 @@ union node{
     struct cond * cond;
 };
 
-struct ast{
-    enum  ast_type type;
-    union node * node;
-};
 
 struct ast * mk_node(void);
 struct ast * mk_integer(int n);
@@ -111,7 +113,7 @@ struct ast * mk_var(char * var);
 struct ast * mk_import(struct path * chemin);
 struct ast * mk_app(struct ast * fun, struct ast * arg);
 struct ast * mk_word(char * str);
-struct ast * mk_tree(char * label, bool is_value, bool nullary, bool space, 
+struct ast * mk_tree(char * label, bool is_value, bool nullary, bool space,
                      struct attributes * att, struct ast * daughters);
 struct ast * mk_forest(bool is_value, struct ast * head, struct ast * tail);
 struct ast * mk_fun(char * id, struct ast * body);

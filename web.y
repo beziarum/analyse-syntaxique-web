@@ -106,7 +106,7 @@ lword:		lword[lw1] word
 	;
 
 word:		TXTWORD {printf("nesp\n");$$=mk_tree($TXTWORD,false,false,false,NULL,NULL);}
-	|	TXTWORD SPACES {printf("eps\n");$$=mk_tree($TXTWORD,false,false,true,NULL,NULL);}
+	|	TXTWORD SPACES     							{printf("eps\n");$$=mk_tree($TXTWORD,false,false,true,NULL,NULL);}
 	;
 
 node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
