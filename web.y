@@ -43,7 +43,9 @@ web:		space forest space
 		}
 	;
 
-forest:		forest[f1] space node[f2]
+
+
+forest:		forest[f1] space forest[f2]
 		{
 		    if($f1==NULL)
 			$$=$f2;
@@ -108,7 +110,7 @@ lword:		lword[lw1] word
 	;
 
 word:		TXTWORD {printf("nesp\n");$$=mk_word($1);}
-		|	TXTWORD space {printf("eps\n");$$=mk_tree("",true,false,true,NULL,mk_word($1));}
+		|	TXTWORD SPACES {printf("eps\n");$$=mk_tree("",true,false,true,NULL,mk_word($1));}
 		;
 
 node:		TAG flattributs space  OPEN_BRACES space  forest space  CLOSE_BRACES
@@ -149,6 +151,6 @@ node:		TAG flattributs space  OPEN_BRACES space  forest space  CLOSE_BRACES
 		}
 	;
 
-space : SPACES
-		|%empty {printf("tamere\n");}
-		;
+	space : SPACES
+			|%empty
+			;
