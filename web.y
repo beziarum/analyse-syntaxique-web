@@ -110,7 +110,10 @@ word:		TXTWORD {printf("nesp\n");$$=mk_tree($TXTWORD,false,false,false,NULL,NULL
 	;
 
 node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
-		/*{
+
+
+		/*{ ancienne version avec tree.h
+
 		    $$=mk_tree($TAG,
 				   false,
 				   false,
@@ -126,7 +129,7 @@ node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
 				   false,
 				   false,
 				   $flattributs,
-				   NULL);  // a changer (ast daughters)
+				   $forest);  // a changer (ast daughters)
     }
 
 	|	TAG flattributs SLASH
