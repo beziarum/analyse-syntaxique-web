@@ -24,7 +24,11 @@ enum binop{PLUS, MINUS, MULT, DIV, LEQ, LE, GEQ, GE, EQ, OR, AND};
 
 enum unaryop {NOT};
 
-struct ast;
+struct ast{
+    enum  ast_type type;
+    union node * node;
+};
+
 
 
 struct app{
@@ -77,7 +81,7 @@ struct cond{
 
 struct declrec{
     char * id;
-    struct ast * body
+    struct ast * body;
 };
 
 
@@ -95,10 +99,6 @@ union node{
     struct cond * cond;
 };
 
-struct ast{
-    enum  ast_type type;
-    union node * node;
-};
 
 struct ast * mk_node(void);
 struct ast * mk_integer(int n);
