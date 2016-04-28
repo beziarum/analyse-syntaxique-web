@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "struct.h"    
+#include "ast.h"
 int yylex(void);
 void yyerror(char  *);
 
@@ -33,73 +33,75 @@ extern struct env* e;
 
 %union
 {
-    tree t;
-    attributes a;
+    struct tree * t;
+    struct attributes * a;
     char* txt;
-    struct ast* ast;
+		struct ast * ast;
+		struct attributes * attr;
+
 }
 
-
-%type	<txt>		TAG ALNUMSUITE TXTWORD NAME name BINARYOP
-%type	<t>		node forest word lword string
-%type	<a>		attribut lattributs flattributs
-%type	<ast>		app
+%type	<txt>		TAG ALNUMSUITE TXTWORD
+%type <ast>  node forest word lword string
+%type <attr> attribut lattributs flattributs
 %%
 
-web:		blet forest
+web:		blet space forest space
 		{
 		    printf("--------------------------------\n");
-		    display_tree($forest);
+		    //display_tree($2);
 		    printf("\n");
 		}
 	;
 
-forest:		forest[f1] node[f2]
+
+
+forest:		forest[f1] space forest[f2]
 		{
 		    if($f1==NULL)
 			$$=$f2;
 		    else
 		    {
-			ajouter_frere($f1,$f2);
+				mk_forest(false,$f1,$f2);
 			$$=$f1;
 		    }
-		    display_tree($f2);
+		    //display_tree($f2);
 		    printf("\n");
 		}
-	|	nforest forest {$$=$2;}
-	|	forest nforest
+	|	nforest space forest {$$=$3;}
+	|	forest space  nforest
 	|	string
-	|	OPEN_BRACES forest CLOSE_BRACES {$$=$2;}
+	|	OPEN_BRACES space forest space  CLOSE_BRACES {$$=$3;}
 	|	node
 		{
-		    display_tree($node);
+		    //display_tree($node);
 		    printf("\n");
 		    $$=$node;
 		}
 	;
 
-nforest:	nforest nforest
-	|	OPEN_BRACES CLOSE_BRACES
+nforest:	nforest space  nforest
+	|	OPEN_BRACES space  CLOSE_BRACES
 	;
 
-flattributs:	OPEN_BRACKET lattributs CLOSE_BRACKET
+flattributs:	OPEN_BRACKET space  lattributs space  CLOSE_BRACKET
 		{
 		  $$=$lattributs;
 		}
-	|	%empty {$$=NULL;}
 	;
 
-lattributs:	lattributs COMMA attribut
+lattributs:	attribut SPACES  lattributs
 		{
-		  ajouter_suivant($1,$3);
+
+		$1->next = $3;
 		}
 	|	attribut
-		  
+
 	;
 
 attribut:	TAG EQUAL string
 		{
-		  $$=attributes_create($TAG,$string);
+		  $$=mk_attributes(mk_word($1),$string,NULL);
 		}
 	;
 
@@ -112,35 +114,51 @@ lword:		lword[lw1] word
 		  $$=$2;
 		else
 		{
-		    ajouter_frere($lw1,$word);
+		  mk_forest(true,$lw1,$word);
 		}
 		}
 	|	%empty { $$=NULL;}
 	;
 
-word:		TXTWORD {printf("nesp\n");$$=tree_create($TXTWORD,true,false,WORD,NULL,NULL,NULL);}
-	|	TXTWORD SPACES {printf("eps\n");$$=tree_create($TXTWORD,true,true,WORD,NULL,NULL,NULL);}
-	;
+word:		TXTWORD {printf("nesp\n");$$=mk_word($1);}
+		|	TXTWORD SPACES {printf("eps\n");$$=mk_tree("",true,false,true,NULL,mk_word($1));}
+		;
 
-node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
+node:		TAG flattributs space  OPEN_BRACES space  forest space  CLOSE_BRACES
 		{
-		    $$=tree_create($TAG,
-				   false,
-				   false,
-				   TREE,
-				   $flattributs,
-				   $forest,
-				   NULL);
+		    $$=mk_tree($TAG,
+			       false,
+			       false,
+			       false,
+			       $flattributs,
+			       $forest);
+		}
+	|	TAG OPEN_BRACES space  forest space  CLOSE_BRACES
+		{
+		    $$=mk_tree($TAG,
+			       false,
+			       false,
+			       false,
+			       NULL,
+			       $forest);
+		}
+	|	TAG SLASH
+	        {
+		    $$=mk_tree($TAG,
+			       false,
+			       true,
+			       false,
+			       NULL,
+			       NULL);
 		}
 	|	TAG flattributs SLASH
 		{
-		    $$=tree_create($TAG,
-				   true,
-				   false,
-				   TREE,
-				   $flattributs,
-				   NULL,
-				   NULL);
+		    $$=mk_tree($TAG,
+			       false,
+			       true,
+			       false,
+			       $flattributs,
+			       NULL);
 		}
 	;
 
@@ -157,12 +175,6 @@ blet:		let EOL blet
 	|	%empty
 	;
 
-app:		app node
-		{
-		   $$=mk_app($app,$node);
-		}
-	|	BINARYOP node
-		{
-		    $$=mk_app($BINARYOP,$node);
-		}
-	;
+	space : SPACES
+			|%empty
+			;

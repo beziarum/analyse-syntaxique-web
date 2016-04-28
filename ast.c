@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "ast.h"
 
 struct ast * mk_node(void){
@@ -51,9 +52,8 @@ struct ast * mk_word(char * str){
     e->type = WORD;
     e->node->str = str;
     return e;
-};
-struct ast * mk_tree(char * label, bool is_value, bool nullary, bool space,
-                     struct attributes * att, struct ast * daughters){
+}
+struct ast * mk_tree(char * label, bool is_value, bool nullary, bool space,struct attributes * att, struct ast * daughters){
     struct ast * e = mk_node();
     e->type = TREE;
     e->node->tree = malloc(sizeof(struct tree));
@@ -107,4 +107,25 @@ struct ast * mk_declrec(char * id, struct ast * body){
     e->node->fun->id = id;
     e->node->fun->body=body;
     return e;
+}
+
+struct attributes * mk_attributes(struct ast * key, struct ast * value, struct attributes * next) {
+    struct attributes *a = malloc(sizeof (struct attributes));
+    a->key = key;
+    a->value = value;
+    a->next = next;
+    return a;
+}
+
+void display_tree(struct tree * t){
+  display_tree_rec(t,1);
+}
+
+void display_tree_rec(struct tree * t,int p){
+  if(t == NULL)
+    return;
+  for(int i =0; i<p;i++)
+    printf("| ");
+  printf("%s\n",t->label);
+  display_tree_rec((struct tree *)t->daughters,p+1);
 }
