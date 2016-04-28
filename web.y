@@ -49,7 +49,11 @@ extern struct env* e;
 
 %%
 
+<<<<<<< HEAD
 web:		blet space forest space
+=======
+web:		 forest
+>>>>>>> dev
 		{
 		    printf("--------------------------------\n");
 		    //display_tree($2);
@@ -71,8 +75,13 @@ forest:		forest[f1] forest[f2]
 		    //display_tree($f2);
 		    printf("\n");
 		}
+<<<<<<< HEAD
 	|	nforest space forest {$$=$3;}
 	|	forest nforest
+=======
+	|	nforest forest {$$=$2;}
+	|	forest  nforest
+>>>>>>> dev
 	|	string
 	|	OPEN_BRACES forest  CLOSE_BRACES {$$=$2;}
 	|	node
@@ -83,21 +92,26 @@ forest:		forest[f1] forest[f2]
 		}
 	;
 
+<<<<<<< HEAD
 nforest:	nforest space  nforest
 	|	OPEN_BRACES space  CLOSE_BRACES
 	|	space
+=======
+nforest:	nforest  nforest
+	|	OPEN_BRACES CLOSE_BRACES
+>>>>>>> dev
 	;
 
-flattributs:	OPEN_BRACKET space  lattributs space  CLOSE_BRACKET
+flattributs:	OPEN_BRACKET  lattributs  CLOSE_BRACKET
 		{
 		  $$=$lattributs;
 		}
 	;
 
-lattributs:	attribut SPACES  lattributs
+lattributs:	attribut  lattributs
 		{
 
-		$1->next = $3;
+		$1->next = $2;
 		}
 	|	attribut
 
@@ -121,7 +135,7 @@ lword:		lword[lw1] word
 		  mk_forest(true,$lw1,$word);
 		}
 		}
-	|	space { $$=NULL;}
+	|space	 { $$=NULL;}
 	;
 
 word:
@@ -129,7 +143,11 @@ word:
 		|	TXTWORD {printf("nesp\n");$$=mk_word($1);}
 		;
 
+<<<<<<< HEAD
 node:		TAG flattributs space  OPEN_BRACES forest  CLOSE_BRACES
+=======
+node:		TAG flattributs  OPEN_BRACES  forest  CLOSE_BRACES
+>>>>>>> dev
 		{
 		    $$=mk_tree($TAG,
 			       false,
@@ -138,7 +156,7 @@ node:		TAG flattributs space  OPEN_BRACES forest  CLOSE_BRACES
 			       $flattributs,
 			       $forest);
 		}
-	|	TAG OPEN_BRACES space  forest space  CLOSE_BRACES
+	|	TAG OPEN_BRACES  forest  CLOSE_BRACES
 		{
 		    $$=mk_tree($TAG,
 			       false,
@@ -167,6 +185,7 @@ node:		TAG flattributs space  OPEN_BRACES forest  CLOSE_BRACES
 		}
 	;
 
+<<<<<<< HEAD
 name:		NAME {$$=mk_word($1);}
 	|	TAG {$$=mk_word($1);}
 	;
@@ -185,3 +204,8 @@ space: 		SPACES
 	|	EOL
 			;
 
+=======
+space: SPACES
+		|%empty
+		;
+>>>>>>> dev
