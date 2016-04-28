@@ -1,5 +1,5 @@
 
-#include "struct.h"
+
 #include "web.tab.h"
 #include "import.h"
 struct env* initial_env;

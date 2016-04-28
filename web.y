@@ -41,8 +41,8 @@ extern struct env* e;
 
 }
 
-%type	<txt>		TAG ALNUMSUITE TXTWORD
-%type <ast>  node forest word lword string
+%type	<txt>		TAG ALNUMSUITE TXTWORD NAME
+%type <ast>  node forest word lword string name
 %type <attr> attribut lattributs flattributs
 %%
 
@@ -162,8 +162,8 @@ node:		TAG flattributs space  OPEN_BRACES space  forest space  CLOSE_BRACES
 		}
 	;
 
-name:		NAME
-	|	TAG
+name:		NAME {$$=mk_word($1);}
+	|	TAG {$$=mk_word($1);}
 	;
 let:		LET SPACES name SPACES EQUAL node SEMICOLON
 		{
