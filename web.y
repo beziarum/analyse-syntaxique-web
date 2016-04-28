@@ -7,10 +7,6 @@
 #define YYDEBUG 1
 int yylex(void);
 void yyerror(char  *);
-
-
-extern struct env* e;
-
 %}
 %token			OPEN_BRACES  // {
 %token			CLOSE_BRACES // }
@@ -20,18 +16,11 @@ extern struct env* e;
 %token			COMMA        // ,
 %token			DQUOTE       // "
 %token			EQUAL        // =
-%token			SEMICOLON    // ;
-%token			EOL          // \n
 %token			SPACES
-%token			NAME
 %token			TAG
 %token			ALNUMSUITE
 %token			TXTWORD
 %token			TXTEWORD
-%token			BINARYOP
-
-%token			LET
-
 %union
 {
     struct tree * t;
@@ -42,18 +31,14 @@ extern struct env* e;
 
 }
 
-%type	<txt>		TAG ALNUMSUITE TXTWORD NAME
-%type <ast>  node forest word lword string name
+%type	<txt>		TAG ALNUMSUITE TXTWORD
+%type <ast>  node forest word lword string
 %type <attr> attribut lattributs flattributs
 %debug
 
 %%
 
-<<<<<<< HEAD
-web:		blet space forest space
-=======
 web:		 forest
->>>>>>> dev
 		{
 		    printf("--------------------------------\n");
 		    //display_tree($2);
@@ -75,13 +60,8 @@ forest:		forest[f1] forest[f2]
 		    //display_tree($f2);
 		    printf("\n");
 		}
-<<<<<<< HEAD
-	|	nforest space forest {$$=$3;}
-	|	forest nforest
-=======
 	|	nforest forest {$$=$2;}
 	|	forest  nforest
->>>>>>> dev
 	|	string
 	|	OPEN_BRACES forest  CLOSE_BRACES {$$=$2;}
 	|	node
@@ -92,14 +72,8 @@ forest:		forest[f1] forest[f2]
 		}
 	;
 
-<<<<<<< HEAD
-nforest:	nforest space  nforest
-	|	OPEN_BRACES space  CLOSE_BRACES
-	|	space
-=======
 nforest:	nforest  nforest
 	|	OPEN_BRACES CLOSE_BRACES
->>>>>>> dev
 	;
 
 flattributs:	OPEN_BRACKET  lattributs  CLOSE_BRACKET
@@ -143,11 +117,7 @@ word:
 		|	TXTWORD {printf("nesp\n");$$=mk_word($1);}
 		;
 
-<<<<<<< HEAD
-node:		TAG flattributs space  OPEN_BRACES forest  CLOSE_BRACES
-=======
 node:		TAG flattributs  OPEN_BRACES  forest  CLOSE_BRACES
->>>>>>> dev
 		{
 		    $$=mk_tree($TAG,
 			       false,
@@ -185,27 +155,6 @@ node:		TAG flattributs  OPEN_BRACES  forest  CLOSE_BRACES
 		}
 	;
 
-<<<<<<< HEAD
-name:		NAME {$$=mk_word($1);}
-	|	TAG {$$=mk_word($1);}
-	;
-let:		LET SPACES name space EQUAL space node space SEMICOLON
-		{
-		    //e=process_binding_instruction($name,$node,e);
-		}
-	;
-
-blet:		let space blet
-	|	%empty
-	;
-
-space: 		SPACES
-	|	%empty
-	|	EOL
-			;
-
-=======
 space: SPACES
 		|%empty
 		;
->>>>>>> dev
