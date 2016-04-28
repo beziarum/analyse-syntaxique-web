@@ -31,6 +31,7 @@ void yyerror(char  *);
 
 }
 
+
 %type	<txt>		TAG ALNUMSUITE TXTWORD
 %type <ast>  node forest word lword string
 %type <attr> attribut lattributs flattributs
@@ -48,7 +49,7 @@ web:		space forest space
 
 
 
-forest:		forest[f1] space forest[f2]
+forest:		forest[f1] forest[f2]
 		{
 		    if($f1==NULL)
 			$$=$f2;
@@ -72,11 +73,10 @@ forest:		forest[f1] space forest[f2]
 			    //display_tree($f2);
 			    printf("\n");
 			}*/
-	|	nforest space forest {$$=$3;}
-	|	forest space  nforest
+	|	nforest forest[f1] {$$=$f1;}
+	|	forest nforest
 	|	string
-	|	forest CLOSE_BRACES
-	|	OPEN_BRACES space forest space  CLOSE_BRACES {$$=$3;}
+	|	OPEN_BRACES forest[f1]  CLOSE_BRACES {$$=$f1;}
 	|	node
 		{
 		    //display_tree($node);
@@ -87,6 +87,7 @@ forest:		forest[f1] space forest[f2]
 
 nforest:	nforest space  nforest
 	|	OPEN_BRACES space  CLOSE_BRACES
+	|	space
 	;
 
 flattributs:	OPEN_BRACKET space  lattributs space  CLOSE_BRACKET
@@ -130,7 +131,7 @@ word:
 		|	TXTWORD {printf("nesp\n");$$=mk_word($1);}
 		;
 
-node:		TAG flattributs space  OPEN_BRACES space  forest space  CLOSE_BRACES
+node:		TAG flattributs space  OPEN_BRACES forest  CLOSE_BRACES
 		{
 		    $$=mk_tree($TAG,
 			       false,
