@@ -3,7 +3,7 @@ YACC=bison -d -v -t --debug
 CC=gcc
 
 LDLIBS=-lfl -ly
-CFLAGS=-std=c99 -Wall -Wpedantic -D_XOPEN_SOURCE=700
+CFLAGS=-std=c99 -Wall -Wpedantic -D_XOPEN_SOURCE=700 -g
 
 all: autoYacc
 

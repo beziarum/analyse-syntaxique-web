@@ -43,7 +43,7 @@ extern struct env* e;
 }
 
 %type	<txt>		TAG ALNUMSUITE TXTWORD NAME
-%type <ast>  node forest word lword string name
+%type <ast>  node forest word lword string name app BINARYOP tree
 %type <attr> attribut lattributs flattributs
 %debug
 
@@ -59,7 +59,7 @@ web:		blet space forest space
 
 
 
-forest:		forest[f1] forest[f2]
+forest:		forest[f1] tree[f2]
 		{
 		    if($f1==NULL)
 			$$=$f2;
@@ -71,10 +71,13 @@ forest:		forest[f1] forest[f2]
 		    //display_tree($f2);
 		    printf("\n");
 		}
-	|	nforest space forest {$$=$3;}
+	|	nforest forest {$$=$2;}
 	|	forest nforest
-	|	string
+	|	tree
+
+tree:		string
 	|	OPEN_BRACES forest  CLOSE_BRACES {$$=$2;}
+	|	app {$$=NULL;}
 	|	node
 		{
 		    //display_tree($node);
@@ -170,14 +173,18 @@ node:		TAG flattributs space  OPEN_BRACES forest  CLOSE_BRACES
 name:		NAME {$$=mk_word($1);}
 	|	TAG {$$=mk_word($1);}
 	;
-let:		LET SPACES name space EQUAL space node space SEMICOLON EOL
+let:		LET SPACES name space EQUAL space tree space SEMICOLON EOL
 		{
 		    //e=process_binding_instruction($name,$node,e);
 		}
 	;
 
 blet:		let blet
+		app space blet {process_instruction($app);}
 	|	%empty
+	;
+
+app:		BINARYOP SPACES string[f1] SPACES tree[f2] { $$=mk_app(mk_app($BINARYOP,$f1),$f2);}
 	;
 
 space: 		SPACES

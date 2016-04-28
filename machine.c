@@ -1,16 +1,45 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include <string.h>
 #include <assert.h>
 #include "machine.h"
 #include "pattern_matching.h"
 
+void emitfd( int fd,struct ast * ast){
+    if(ast->type == WORD)
+	dprintf(fd,"%s",ast->node->str);
+    else if(ast->type == FOREST)
+    {
+	emitfd(fd,ast->node->forest->head);
+	emitfd(fd,ast->node->forest->tail);
+    }
+    else if(ast->type == FOREST)
+    {
+	if(strcmp(ast->node->tree->label,"") == 0);
+	else if(ast->node->tree->nullary)
+	    dprintf(fd,"%s/\n",ast->node->tree->label);
+	else
+	{
+	    dprintf(fd,"<%s>\n",ast->node->tree->label);
+	    emitfd(fd,ast->node->tree->daughters);
+	    if(ast->node->tree->space)
+		dprintf(fd," ");
+	    dprintf(fd,"</%s>\n",ast->node->tree->label);
+	}
+    }
+    else
+	fprintf(stderr,"Dafuck");
+
+}
 
 void emit( char * file, struct ast * ast){
-    assert(file!=NULL && (ast ==NULL || ast!= NULL));
-    fprintf(stderr,"Vous devez implémenter la fonction emit");
-    return;
+    assert(file!=NULL);
+    int fd=open(file,O_CREAT|O_WRONLY,0666);
+    emitfd(fd,ast);
+    close(fd);
 }
+
 
 struct env * mk_env(char * var, struct closure * value, struct env * next){
     struct env * res = malloc(sizeof(struct env));

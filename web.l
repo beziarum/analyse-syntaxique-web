@@ -17,8 +17,8 @@
 
 
 let {return LET;}
-emit {yylval.txt=strdup(yytext); return BINARYOP;}
-[+*] {yylval.txt=strdup(yytext); return BINARYOP;}
+emit {yylval.ast=mk_binop(BINOP); return BINARYOP;}
+[+*] {yylval.ast=mk_word(strdup(yytext)); return BINARYOP;}
 
 [xX][mM][lL]([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+) {
  printf("world : %s\n",yytext);
