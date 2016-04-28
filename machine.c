@@ -1,46 +1,16 @@
 #include <stdlib.h>
-#include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include "machine.h"
 #include "pattern_matching.h"
 
-void emitfd( int fd,struct ast * ast){
-    if(ast->type == WORD)
-	dprintf(fd,"%s",ast->node->str);
-    else if(ast->type == FOREST)
-    {
-	emitfd(fd,ast->node->forest->head);
-	emitfd(fd,ast->node->forest->tail);
-    }
-    else if(ast->type == FOREST)
-    {
-	if(strcmp(ast->node->tree->label,"") == 0);
-	else if(ast->node->tree->nullary)
-	    dprintf(fd,"%s/\n",ast->node->tree->label);
-	else
-	{
-	    dprintf(fd,"<%s>\n",ast->node->tree->label);
-	    emitfd(fd,ast->node->tree->daughters);
-	    if(ast->node->tree->space)
-		dprintf(fd," ");
-	    dprintf(fd,"</%s>\n",ast->node->tree->label);
-	}
-    }
-    else
-	dprintf(stderr,"Dafuck");
-
-}
 
 void emit( char * file, struct ast * ast){
-    assert(file!=NULL);
-    int fd=open(file,O_WRONLY,0666);
-    emitfd(fd,ast);
-    close(fd);
+    assert(file!=NULL && (ast ==NULL || ast!= NULL));
+    fprintf(stderr,"Vous devez implémenter la fonction emit");
+    return;
 }
-
-
 
 struct env * mk_env(char * var, struct closure * value, struct env * next){
     struct env * res = malloc(sizeof(struct env));
@@ -330,16 +300,13 @@ void reconstruct_forest(struct machine * m, struct ast * tail){
 }
 
 void pop_forestcomphead(struct machine * m){
-    char * c;
     struct ast * head;
     struct ast * tail;
     struct env * env;
     enum ast_type tp = get_ast_type(m->closure->value);
     switch(tp){
     case INTEGER:
-        c=malloc(21*sizeof(char));
-        sprintf(c,"%d",m->closure->value->node->num);
-        head= mk_word(c);
+        head= mk_word(string_of_int(m->closure->value->node->num));
         break;
     case TREE:
     case WORD:
@@ -503,8 +470,7 @@ void on_integer(struct machine * m){
             exit(1);
             break;
         case TREECOMPFOREST:
-            fprintf(stderr,"Erreur de typage, un entier ne peut constituer une forêt.");
-            exit(1);
+            pop_treecompforest(m);
             break;
         case ATTCOMPKEY:
             fprintf(stderr,"Erreur de typage, un entier ne peut être la clé d'un attribut.");
@@ -521,8 +487,7 @@ void on_integer(struct machine * m){
             pop_forestcomphead(m);
             break;
         case FORESTCOMPTAIL:
-            fprintf(stderr,"Erreur de typage, un entier ne peut être utilisé comme forêt.");
-            exit(1);
+            pop_forestcomptail(m);
             break;
         case FUNCTION:
             pop_function(m);
@@ -833,8 +798,7 @@ void on_word(struct machine * m){
             exit(1);
             break;
         case TREECOMPFOREST:
-            fprintf(stderr,"Erreur de typage, un mot ne peut constituer une forêt.");
-            exit(1);
+            pop_treecompforest(m);
             break;
         case ATTCOMPKEY:
             pop_attcompkey(m);
@@ -882,6 +846,9 @@ void on_tree(struct machine * m){
             switch(m->stack->top->type){
             case FUNCTION:
                 pop_function(m);
+                break;
+            case TREECOMPFOREST:
+                pop_treecompforest(m);
                 break;
             case FORESTCOMPHEAD:
                 pop_forestcomphead(m);
