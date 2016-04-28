@@ -7,6 +7,10 @@
 #define YYDEBUG 1
 int yylex(void);
 void yyerror(char  *);
+
+
+extern struct env* e;
+
 %}
 %token			OPEN_BRACES  // {
 %token			CLOSE_BRACES // }
@@ -16,11 +20,18 @@ void yyerror(char  *);
 %token			COMMA        // ,
 %token			DQUOTE       // "
 %token			EQUAL        // =
+%token			SEMICOLON    // ;
+%token			EOL          // \n
 %token			SPACES
+%token			NAME
 %token			TAG
 %token			ALNUMSUITE
 %token			TXTWORD
 %token			TXTEWORD
+%token			BINARYOP
+
+%token			LET
+
 %union
 {
     struct tree * t;
@@ -31,14 +42,14 @@ void yyerror(char  *);
 
 }
 
-%type	<txt>		TAG ALNUMSUITE TXTWORD
-%type <ast>  node forest word lword string
+%type	<txt>		TAG ALNUMSUITE TXTWORD NAME
+%type <ast>  node forest word lword string name app BINARYOP tree
 %type <attr> attribut lattributs flattributs
 %debug
 
 %%
 
-web:		 forest
+web:		blet forest
 		{
 		    printf("--------------------------------\n");
 		    //display_tree($2);
@@ -48,7 +59,7 @@ web:		 forest
 
 
 
-forest:		forest[f1] forest[f2]
+forest:		forest[f1] tree[f2]
 		{
 		    if($f1==NULL)
 			$$=$f2;
@@ -61,9 +72,12 @@ forest:		forest[f1] forest[f2]
 		    printf("\n");
 		}
 	|	nforest forest {$$=$2;}
-	|	forest  nforest
-	|	string
+	|	forest nforest
+	|	tree
+
+tree:		string
 	|	OPEN_BRACES forest  CLOSE_BRACES {$$=$2;}
+	|	app {$$=NULL;}
 	|	node
 		{
 		    //display_tree($node);
@@ -72,11 +86,11 @@ forest:		forest[f1] forest[f2]
 		}
 	;
 
-nforest:	nforest  nforest
-	|	OPEN_BRACES CLOSE_BRACES
+nforest:	nforest nforest
+	|	OPEN_BRACES   CLOSE_BRACES
 	;
 
-flattributs:	OPEN_BRACKET  lattributs  CLOSE_BRACKET
+flattributs:	OPEN_BRACKET lattributs  CLOSE_BRACKET
 		{
 		  $$=$lattributs;
 		}
@@ -109,7 +123,7 @@ lword:		lword[lw1] word
 		  mk_forest(true,$lw1,$word);
 		}
 		}
-	|space	 { $$=NULL;}
+	|	space { $$=NULL;}
 	;
 
 word:
@@ -117,7 +131,7 @@ word:
 		|	TXTWORD {printf("nesp\n");$$=mk_word($1);}
 		;
 
-node:		TAG flattributs  OPEN_BRACES  forest  CLOSE_BRACES
+node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
 		{
 		    $$=mk_tree($TAG,
 			       false,
@@ -126,7 +140,7 @@ node:		TAG flattributs  OPEN_BRACES  forest  CLOSE_BRACES
 			       $flattributs,
 			       $forest);
 		}
-	|	TAG OPEN_BRACES  forest  CLOSE_BRACES
+	|	TAG OPEN_BRACES forest  CLOSE_BRACES
 		{
 		    $$=mk_tree($TAG,
 			       false,
@@ -154,7 +168,22 @@ node:		TAG flattributs  OPEN_BRACES  forest  CLOSE_BRACES
 			       NULL);
 		}
 	;
+name:		NAME {$$=mk_word($1);}
+	|	TAG {$$=mk_word($1);}
 
-space: SPACES
-		|%empty
+let:		LET SPACES name space EQUAL space tree space SEMICOLON EOL
+		{
+		    //e=process_binding_instruction($name,$node,e);
+		}
+	;
+
+blet:		let blet
+		app space blet {process_instruction($app);}
+	|	%empty
+	;
+
+app:		BINARYOP SPACES string[f1] SPACES tree[f2] { $$=mk_app(mk_app($BINARYOP,$f1),$f2);}
+	;
+space: 		SPACES
+	|	%empty
 		;
