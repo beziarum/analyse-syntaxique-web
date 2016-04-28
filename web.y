@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "ast.h"
+#define YYDEBUG 1
 int yylex(void);
 void yyerror(char  *);
 
@@ -44,6 +45,8 @@ extern struct env* e;
 %type	<txt>		TAG ALNUMSUITE TXTWORD NAME
 %type <ast>  node forest word lword string name
 %type <attr> attribut lattributs flattributs
+%debug
+
 %%
 
 web:		blet space forest space
@@ -56,7 +59,7 @@ web:		blet space forest space
 
 
 
-forest:		forest[f1] space forest[f2]
+forest:		forest[f1] forest[f2]
 		{
 		    if($f1==NULL)
 			$$=$f2;
@@ -69,9 +72,9 @@ forest:		forest[f1] space forest[f2]
 		    printf("\n");
 		}
 	|	nforest space forest {$$=$3;}
-	|	forest space  nforest
+	|	forest nforest
 	|	string
-	|	OPEN_BRACES space forest space  CLOSE_BRACES {$$=$3;}
+	|	OPEN_BRACES forest  CLOSE_BRACES {$$=$2;}
 	|	node
 		{
 		    //display_tree($node);
@@ -82,6 +85,7 @@ forest:		forest[f1] space forest[f2]
 
 nforest:	nforest space  nforest
 	|	OPEN_BRACES space  CLOSE_BRACES
+	|	space
 	;
 
 flattributs:	OPEN_BRACKET space  lattributs space  CLOSE_BRACKET
@@ -117,14 +121,15 @@ lword:		lword[lw1] word
 		  mk_forest(true,$lw1,$word);
 		}
 		}
-	|	%empty { $$=NULL;}
+	|	space { $$=NULL;}
 	;
 
-word:		TXTWORD {printf("nesp\n");$$=mk_word($1);}
-		|	TXTWORD SPACES {printf("eps\n");$$=mk_tree("",true,false,true,NULL,mk_word($1));}
+word:
+			TXTWORD SPACES {printf("eps\n");$$=mk_tree("",true,false,true,NULL,mk_word($1));}
+		|	TXTWORD {printf("nesp\n");$$=mk_word($1);}
 		;
 
-node:		TAG flattributs space  OPEN_BRACES space  forest space  CLOSE_BRACES
+node:		TAG flattributs space  OPEN_BRACES forest  CLOSE_BRACES
 		{
 		    $$=mk_tree($TAG,
 			       false,
@@ -165,16 +170,18 @@ node:		TAG flattributs space  OPEN_BRACES space  forest space  CLOSE_BRACES
 name:		NAME {$$=mk_word($1);}
 	|	TAG {$$=mk_word($1);}
 	;
-let:		LET SPACES name SPACES EQUAL node SEMICOLON
+let:		LET SPACES name space EQUAL space node space SEMICOLON
 		{
-		    e=process_binding_instruction($name,$node,e);
+		    //e=process_binding_instruction($name,$node,e);
 		}
 	;
 
-blet:		let EOL blet
+blet:		let space blet
 	|	%empty
 	;
 
-	space : SPACES
-			|%empty
+space: 		SPACES
+	|	%empty
+	|	EOL
 			;
+

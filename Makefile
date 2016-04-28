@@ -1,5 +1,5 @@
 LEX=flex
-YACC=bison -d -v
+YACC=bison -d -v -t --debug
 CC=gcc
 
 LDLIBS=-lfl -ly
