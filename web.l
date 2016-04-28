@@ -35,7 +35,7 @@ emit {yylval.txt=strdup(yytext); return BINARYOP;}
 \{ {printf("[L] ouverture accolade : %s\n",yytext);return OPEN_BRACES;}
 \} {printf("[L] fermeture accolade : %s\n",yytext);return CLOSE_BRACES;}
 \/ {printf("slash : %s\n",yytext);return SLASH;}
-\n {return EOL;}
+\n+ {printf("toto\n");return EOL;}
 [[:space:]]+ {printf("espaces : %s\n",yytext); return SPACES;}
 \= {printf("egal : %s\n",yytext);return EQUAL;}
 \,  {printf("comma : %s\n",yytext);return COMMA;}

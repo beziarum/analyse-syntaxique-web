@@ -170,13 +170,13 @@ node:		TAG flattributs space  OPEN_BRACES forest  CLOSE_BRACES
 name:		NAME {$$=mk_word($1);}
 	|	TAG {$$=mk_word($1);}
 	;
-let:		LET SPACES name space EQUAL space node space SEMICOLON
+let:		LET SPACES name space EQUAL space node space SEMICOLON EOL
 		{
 		    //e=process_binding_instruction($name,$node,e);
 		}
 	;
 
-blet:		let space blet
+blet:		let blet
 	|	%empty
 	;
 
