@@ -26,11 +26,12 @@
  return TAG;
  }
 \[ {printf("ouverture crochet : %s\n",yytext);return OPEN_BRACKET;}
-\] {printf("fermeture crochet : %s\n",yytext);return CLOSE_BRACKET;}
+\] {printf("fermeture crochet : %s\n",yytext);return CLOSE_BRACKET;BEGIN INITIAL;}
 \{ {printf("[L] ouverture accolade : %s\n",yytext);return OPEN_BRACES;}
 \} {printf("[L] fermeture accolade : %s\n",yytext);return CLOSE_BRACES;}
 \/ {printf("slash : %s\n",yytext);return SLASH;}
-[[:space:]]+ {printf("espaces : %s\n",yytext); return SPACES;}
+<TXT>[[:space:]]+ {return SPACES;}
+[[:space:]]+ {}
 [[:alpha:]]+ {printf("mot : %s\n",yytext);}
 \= {printf("egal : %s\n",yytext);return EQUAL;}
 \,  {printf("comma : %s\n",yytext);return COMMA;}
