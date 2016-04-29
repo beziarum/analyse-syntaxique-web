@@ -124,8 +124,12 @@ emit                          {
                               }
 
 \,                            {
+                                 int tmp=lastIsSpace;
                                  lastIsSpace=0;
-                                 return COMMA;
+											if(tmp)
+												return E_COMMA;
+											else
+                                 	return COMMA;
                               }
 
 \;                            {
