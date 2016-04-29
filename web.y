@@ -45,7 +45,7 @@ extern struct env* e;
 }
 
 %type	<txt>		TAG ALNUMSUITE TXTWORD NAME
-%type <ast>  node forest word lword string name app BINARYOP tree
+%type <ast>  node forest word lword string name app BINARYOP tree var
 %type <attr> attribut lattributs flattributs
 %debug
 
@@ -169,6 +169,7 @@ node:		TAG flattributs open_braces forest CLOSE_BRACES
 			       $flattributs,
 			       NULL);
 		}
+	| node LET name EQUAL tree IN
 	| node WHERE name EQUAL tree
 	|	var
 	;
@@ -191,7 +192,7 @@ app:		BINARYOP string[f1] tree[f2] { $$=mk_app(mk_app($BINARYOP,$f1),$f2);}
 	;
 
 
-var:		name COMMA {$$ = mk_var($name);}
+var:		name COMMA {$$ = mk_var($name->node->str);}
 	;
 
 open_braces:	OPEN_BRACES
