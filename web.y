@@ -191,7 +191,7 @@ app:		BINARYOP string[f1] tree[f2] { $$=mk_app(mk_app($BINARYOP,$f1),$f2);}
 	;
 
 
-var:		name COMMA
+var:		name COMMA {$$ = mk_var($name);}
 	;
 
 open_braces:	OPEN_BRACES
