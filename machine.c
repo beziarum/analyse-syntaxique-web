@@ -7,28 +7,55 @@
 #include "machine.h"
 #include "pattern_matching.h"
 
-void emitfd( int fd,struct ast * ast){
+void tabulation(int fd,int tab){
+    for (size_t i = 0; i < tab; i++)
+        dprintf(fd,"  ");
+}
+
+bool emitfd( int fd,struct ast * ast,int tab){
     if(ast==NULL)
-	return;
-    if(ast->type == WORD)
-	   dprintf(fd,"%s\n",ast->node->str);
+	return true;
+    if(ast->type == WORD){
+      //tabulation(fd,tab);
+	   dprintf(fd,"%s",ast->node->str);
+      return false;
+   }
     else if(ast->type == FOREST)
     {
-        emitfd(fd,ast->node->forest->head);
-	emitfd(fd,ast->node->forest->tail);
+        if(emitfd(fd,ast->node->forest->head,tab))
+            //dprintf(fd,"\n")
+            ;
+	if(emitfd(fd,ast->node->forest->tail,tab))
+      //dprintf(fd,"\n")
+      ;
     }
     else if(ast->type == TREE)
     {
-	    if(strcmp(ast->node->tree->label,"") == 0);
-	    else if(ast->node->tree->nullary)
-	       dprintf(fd,"<%s/>\n",ast->node->tree->label);
+        tab=tab+1;
+	    if(strcmp(ast->node->tree->label,"") == 0){
+         emitfd(fd,ast->node->tree->daughters,tab);
+         if(ast->node->tree->space)
+		    dprintf(fd," ");
+       }
+	    else if(ast->node->tree->nullary){
+         tabulation(fd,tab);
+	       dprintf(fd,"<%s/>",ast->node->tree->label);
+          return true;
+       }
 	    else
 	    {
+            tabulation(fd,tab);
+            /*if(ast->node->tree->daughters->type == FOREST)
+               dprintf(fd,"tree<%s>",ast->node->tree->label);
+            else*/
 	        dprintf(fd,"<%s>\n",ast->node->tree->label);
-	        emitfd(fd,ast->node->tree->daughters);
+	        if(emitfd(fd,ast->node->tree->daughters,tab))
+               dprintf(fd,"\n");
 	        if(ast->node->tree->space)
 		    dprintf(fd," ");
+            tabulation(fd,tab);
 	        dprintf(fd,"</%s>\n",ast->node->tree->label);
+           return false;
 	    }
     }
     else
@@ -38,8 +65,8 @@ void emitfd( int fd,struct ast * ast){
 void emit( char * file, struct ast * ast){
     fprintf(stderr,"on rentre dans emit\n");
     assert(file!=NULL);
-    int fd=open(file,O_CREAT|O_WRONLY,0666);
-    emitfd(fd,ast);
+    int fd=open(file,O_CREAT|O_WRONLY|O_TRUNC,0666);
+    emitfd(fd,ast,0);
     close(fd);
 }
 

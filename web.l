@@ -23,9 +23,14 @@ LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
                               }
 
 <TXT>[^[:space:]"]+           {  //"// juste pour la coloration syntaxique qui plante pas mal sinon
-                                 lastIsSpace=1;
+                                 lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return TXTWORD;
+                              }
+
+<TXT>[[:space:]]+             {
+                              	lastIsSpace = 1;
+                              	return SPACES;
                               }
 
 
