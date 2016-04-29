@@ -31,9 +31,9 @@ extern struct env* e;
 %token			BINARYOP
 %token			IN
 %token			WHERE
-%token 			FUN
 
 %token			LET
+%token 			FUN
 
 %union
 {
@@ -67,7 +67,7 @@ forest:		forest[f1] forest[f2]
 		    if($f1==NULL)
 			$$=$f2;
 		    else
-		    {		
+		    {
 		       $$=mk_forest(false,$f1,$f2);
 		    }
 		    //display_tree($f2);
@@ -210,4 +210,6 @@ space: 		SPACES
 	|	%empty
 		;
 
-fun :
+fun : FUN {$$ = mk_fun($fun->node->str, NULL);}
+		| FUN arg
+		;
