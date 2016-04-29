@@ -23,6 +23,7 @@ extern struct env* e;
 %token			EQUAL          // =
 %token			SEMICOLON      // ;
 %token			EOL            // \n
+%token			ARROW
 %token			SPACES
 %token			NAME
 %token			TAG
@@ -32,7 +33,7 @@ extern struct env* e;
 %token			BINARYOP
 %token			IN
 %token			WHERE
-
+%token			LFUN
 %token			LET
 %token 			FUN
 
@@ -47,7 +48,11 @@ extern struct env* e;
 }
 
 %type	<txt>		TAG ALNUMSUITE TXTWORD NAME
+<<<<<<< HEAD
 %type <ast>  node forest word lword string name app BINARYOP tree var fun
+=======
+%type <ast>  node forest word lword string name app BINARYOP tree var lname
+>>>>>>> dev
 %type <attr> attribut lattributs flattributs
 %debug
 
@@ -192,6 +197,15 @@ app:		BINARYOP string[f1] tree[f2] { $$=mk_app(mk_app($BINARYOP,$2),$3);}
 
 
 var:		name COMMA {$$ = mk_var($name->node->str);}
+	;
+
+funct:		LET name lname EQUAL tree
+	|	LET name EQUAL LFUN lname ARROW tree
+	|	LET name lname EQUAL LFUN lname ARROW tree
+	;
+
+lname:		lname[ln] name {$$=mk_forest($ln,mk_word($name));}
+	|	name {$$=mk_word($name);}
 	;
 
 open_braces:	OPEN_BRACES
