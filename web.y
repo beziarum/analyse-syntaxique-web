@@ -7,10 +7,7 @@
 #define YYDEBUG 1
 int yylex(void);
 void yyerror(char  *);
-
-
 extern struct env* e;
-
 %}
 %token			OPEN_BRACES    // {
 %token			E_OPEN_BRACES  // { + espace avant
