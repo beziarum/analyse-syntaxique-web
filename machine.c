@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <assert.h>
+#include <unistd.h>
 #include "machine.h"
 #include "pattern_matching.h"
 
