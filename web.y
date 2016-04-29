@@ -171,18 +171,18 @@ node:		TAG flattributs open_braces forest CLOSE_BRACES
 name:		NAME {$$=mk_word($1);}
 	|	TAG {$$=mk_word($1);}
 
-let:		LET SPACES name space EQUAL space tree space SEMICOLON EOL
+let:		LET name EQUAL tree SEMICOLON
 		{
 		    //e=process_binding_instruction($name,$node,e);
 		}
 	;
 
 blet:		let blet
-		app space blet {process_instruction($app);}
+	|	app blet {process_instruction($app);}
 	|	%empty
 	;
 
-app:		BINARYOP SPACES string[f1] SPACES tree[f2] { $$=mk_app(mk_app($BINARYOP,$f1),$f2);}
+app:		BINARYOP string[f1] tree[f2] { $$=mk_app(mk_app($BINARYOP,$f1),$f2);}
 	;
 
 open_braces:	OPEN_BRACES
