@@ -120,7 +120,7 @@ lword:		lword[lw1] word
 		  $$=$2;
 		else
 		{
-		  mk_forest(true,$lw1,$word);
+		 $$= mk_forest(false,$lw1,$word);
 		}
 		}
 	|	space { $$=NULL;}
@@ -181,7 +181,7 @@ let:		LET name EQUAL tree SEMICOLON
 	;
 
 blet:		let blet
-	|	app blet {process_instruction($1);}
+	|	app blet {process_instruction($1,e);}
         //	{process_instruction(mk_app(mk_app(mk_binop(EMIT),mk_word("test")),mk_tree("prout",true,true,false,NULL,NULL)));}
 	|	%empty
 	;
