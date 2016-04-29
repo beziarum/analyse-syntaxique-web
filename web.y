@@ -35,7 +35,6 @@ extern struct env* e;
 %token			WHERE
 %token			LFUN
 %token			LET
-%token 			FUN
 
 %union
 {
@@ -48,11 +47,7 @@ extern struct env* e;
 }
 
 %type	<txt>		TAG ALNUMSUITE TXTWORD NAME
-<<<<<<< HEAD
-%type <ast>  node forest word lword string name app BINARYOP tree var fun
-=======
 %type <ast>  node forest word lword string name app BINARYOP tree var lname
->>>>>>> dev
 %type <attr> attribut lattributs flattributs
 %debug
 
@@ -222,8 +217,4 @@ slash:		SLASH
 
 space: 		SPACES
 	|	%empty
-		;
-
-fun : FUN {$$ = mk_fun($fun->node->str, NULL);}
-		| FUN arg
 		;
