@@ -12,16 +12,19 @@ void yyerror(char  *);
 extern struct env* e;
 
 %}
-%token			OPEN_BRACES  // {
-%token			CLOSE_BRACES // }
-%token			OPEN_BRACKET // [
-%token			CLOSE_BRACKET// ]
-%token			SLASH        // /
-%token			COMMA        // ,
-%token			DQUOTE       // "
-%token			EQUAL        // =
-%token			SEMICOLON    // ;
-%token			EOL          // \n
+%token			OPEN_BRACES    // {
+%token			E_OPEN_BRACES  // { + espace avant
+%token			CLOSE_BRACES   // }
+%token			OPEN_BRACKET   // [
+%token			E_OPEN_BRACKET // [ + espace avant
+%token			CLOSE_BRACKET  // ]
+%token			SLASH          // /
+%token			E_SLASH        // / + espace avant
+%token			COMMA          // ,
+%token			DQUOTE         // "
+%token			EQUAL          // =
+%token			SEMICOLON      // ;
+%token			EOL            // \n
 %token			SPACES
 %token			NAME
 %token			TAG
@@ -76,7 +79,7 @@ forest:		forest[f1] tree[f2]
 	|	tree
 
 tree:		string
-	|	OPEN_BRACES forest  CLOSE_BRACES {$$=$2;}
+	|	open_braces forest  CLOSE_BRACES {$$=$2;}
 	|	app {$$=NULL;}
 	|	node
 		{
@@ -87,7 +90,7 @@ tree:		string
 	;
 
 nforest:	nforest nforest
-	|	OPEN_BRACES   CLOSE_BRACES
+	|	open_braces   CLOSE_BRACES
 	;
 
 flattributs:	OPEN_BRACKET lattributs  CLOSE_BRACKET
@@ -131,7 +134,7 @@ word:
 		|	TXTWORD 				{$$=mk_word($1);}
 		;
 
-node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
+node:		TAG flattributs open_braces forest CLOSE_BRACES
 		{
 		    $$=mk_tree($TAG,
 			       false,
@@ -158,7 +161,7 @@ node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
 			       NULL,
 			       NULL);
 		}
-	|	TAG flattributs SLASH
+	|	TAG flattributs slash
 		{
 		    $$=mk_tree($TAG,
 			       false,
@@ -184,6 +187,19 @@ blet:		let blet
 
 app:		BINARYOP SPACES string[f1] SPACES tree[f2] { $$=mk_app(mk_app($BINARYOP,$f1),$f2);}
 	;
+
+open_braces:	OPEN_BRACES
+	|	E_OPEN_BRACES
+	;
+
+open_bracket:	OPEN_BRACKET
+	|	E_OPEN_BRACKET
+	;
+
+slash:		SLASH
+	|	E_SLASH
+	;
+
 space: 		SPACES
 	|	%empty
 		;

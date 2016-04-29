@@ -5,7 +5,7 @@
 #include "ast.h"
 #include "web.tab.h"
 
-
+int lastIsSpace=0;
 %}
 
 LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
@@ -18,53 +18,109 @@ LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
 
 <TXT>\"                       {
                                  BEGIN INITIAL;
+                                 lastIsSpace=0;
                                  return DQUOTE;
                               }
 
-<TXT>[^[:space:]"]+           {
+<TXT>[^[:space:]"]+           {  //"// juste pour la coloration syntaxique qui plante pas mal sinon
+                                 lastIsSpace=1;
                                  yylval.txt=strdup(yytext);
                                  return TXTWORD;
                               }
 
 
-let                           {return LET;}
+let                           {
+                                 lastIsSpace=0;
+                                 return LET;
+                              }
 
 emit                          {
+                                 lastIsSpace=0;
                                  yylval.ast=mk_binop(BINOP);
                                  return BINARYOP;
                               }
 
 [+*]                          {
+                                 lastIsSpace=0;
                                  yylval.ast=mk_word(strdup(yytext));
                                  return BINARYOP;
                               }
 
 [xX][mM][lL]{LEX_LABEL}       {
+                                 lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return NAME;
                               }
 
 
 {LEX_LABEL}                   {
+                                 lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return TAG;
                               }
 
 
-[[:space:]]+                  {}
+[[:space:]]+                  {
+                                 lastIsSpace=1;
+                              }
+
 <INITIAL>\"                   {
+                                 lastIsSpace=0;
                                  BEGIN TXT;
                                  return DQUOTE;
                               }
 
 
-\[                            {return OPEN_BRACKET;}
-\]                            {return CLOSE_BRACKET;}
-\{                            {return OPEN_BRACES;}
-\}                            {return CLOSE_BRACES;}
-\/                            {return SLASH;}
-\=                            {return EQUAL;}
-\,                            {return COMMA;}
-\;                            {return SEMICOLON;}
+\[                            {
+                                 int tmp=lastIsSpace;
+                                 lastIsSpace=0;
+                                 if(tmp)
+                                    return E_OPEN_BRACKET;
+                                 else
+                                    return OPEN_BRACKET;
+                              }
+
+\]                            {
+                                 lastIsSpace=0;
+                                 return CLOSE_BRACKET;
+                              }
+
+\{                            {
+                                 int tmp=lastIsSpace;
+                                 lastIsSpace=0;
+                                 if(tmp)
+                                    return E_OPEN_BRACES;
+                                 else
+                                    return OPEN_BRACES;
+                              }
+
+\}                            {
+                                 lastIsSpace=0;
+                                 return CLOSE_BRACES;
+                              }
+
+\/                            {
+                                 int tmp=lastIsSpace;
+                                 lastIsSpace=0;
+                                 if(tmp)
+                                    return E_SLASH;
+                                 else
+                                    return SLASH;
+                              }
+
+\=                            {
+                                 lastIsSpace=0;
+                                 return EQUAL;
+                              }
+
+\,                            {
+                                 lastIsSpace=0;
+                                 return COMMA;
+                              }
+
+\;                            {
+                                 lastIsSpace=0;
+                                 return SEMICOLON;
+                              }
 
 %%
