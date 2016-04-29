@@ -36,7 +36,7 @@ let                           {
 
 emit                          {
                                  lastIsSpace=0;
-                                 yylval.ast=mk_binop(BINOP);
+                                 yylval.ast=mk_binop(EMIT);
                                  return BINARYOP;
                               }
 

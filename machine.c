@@ -8,18 +8,20 @@
 #include "pattern_matching.h"
 
 void emitfd( int fd,struct ast * ast){
+    if(ast==NULL)
+	return;
     if(ast->type == WORD)
-	   dprintf(fd,"%s",ast->node->str);
+	   dprintf(fd,"%s\n",ast->node->str);
     else if(ast->type == FOREST)
     {
         emitfd(fd,ast->node->forest->head);
-	    emitfd(fd,ast->node->forest->tail);
+	emitfd(fd,ast->node->forest->tail);
     }
     else if(ast->type == TREE)
     {
 	    if(strcmp(ast->node->tree->label,"") == 0);
 	    else if(ast->node->tree->nullary)
-	       dprintf(fd,"%s/\n",ast->node->tree->label);
+	       dprintf(fd,"<%s/>\n",ast->node->tree->label);
 	    else
 	    {
 	        dprintf(fd,"<%s>\n",ast->node->tree->label);
@@ -34,6 +36,7 @@ void emitfd( int fd,struct ast * ast){
 }
 
 void emit( char * file, struct ast * ast){
+    fprintf(stderr,"on rentre dans emit\n");
     assert(file!=NULL);
     int fd=open(file,O_CREAT|O_WRONLY,0666);
     emitfd(fd,ast);
