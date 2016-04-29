@@ -45,7 +45,7 @@ extern struct env* e;
 }
 
 %type	<txt>		TAG ALNUMSUITE TXTWORD NAME
-%type <ast>  node forest word lword string name app BINARYOP tree
+%type <ast>  node forest word lword string name app BINARYOP tree var
 %type <attr> attribut lattributs flattributs
 %debug
 
@@ -61,14 +61,13 @@ web:		blet forest
 
 
 
-forest:		forest[f1] tree[f2]
+forest:		forest[f1] forest[f2]
 		{
 		    if($f1==NULL)
 			$$=$f2;
 		    else
-		    {
-				mk_forest(false,$f1,$f2);
-			$$=$f1;
+		    {		
+		       $$=mk_forest(false,$f1,$f2);
 		    }
 		    //display_tree($f2);
 		    printf("\n");
@@ -82,8 +81,6 @@ tree:		string
 	|	app {$$=NULL;}
 	|	node
 		{
-		    //display_tree($node);
-		    printf("\n");
 		    $$=$node;
 		}
 	;
@@ -169,6 +166,7 @@ node:		TAG flattributs open_braces forest CLOSE_BRACES
 			       $flattributs,
 			       NULL);
 		}
+	| node LET name EQUAL tree IN
 	| node WHERE name EQUAL tree
 	|	var
 	;
@@ -183,15 +181,16 @@ let:		LET name EQUAL tree SEMICOLON
 	;
 
 blet:		let blet
-	|	app blet {process_instruction($app);}
+	|	app blet {process_instruction($1);}
+        //	{process_instruction(mk_app(mk_app(mk_binop(EMIT),mk_word("test")),mk_tree("prout",true,true,false,NULL,NULL)));}
 	|	%empty
 	;
 
-app:		BINARYOP string[f1] tree[f2] { $$=mk_app(mk_app($BINARYOP,$f1),$f2);}
+app:		BINARYOP string[f1] tree[f2] { $$=mk_app(mk_app($BINARYOP,$2),$3);}
 	;
 
 
-var:		name COMMA
+var:		name COMMA {$$ = mk_var($name->node->str);}
 	;
 
 open_braces:	OPEN_BRACES
