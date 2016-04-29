@@ -42,7 +42,7 @@ let                          {
 where                         {
                               	lastIsSpace=0;
                               	return WHERE;
-										}
+                              }
 
 in                            {
                                lastIsSpace=0;
@@ -53,6 +53,11 @@ emit                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(EMIT);
                                  return BINARYOP;
+                              }
+
+fun                           {
+                                 lastIsSpace=0;
+                                 return LFUN;
                               }
 
 [+*]                          {
@@ -140,6 +145,11 @@ emit                          {
 \;                            {
                                  lastIsSpace=0;
                                  return SEMICOLON;
+                              }
+
+->                            {
+                                 lastIsSpace=0;
+                                 return ARROW;
                               }
 
 %%
