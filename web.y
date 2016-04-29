@@ -18,6 +18,7 @@ extern struct env* e;
 %token			SLASH          // /
 %token			E_SLASH        // / + espace avant
 %token			COMMA          // ,
+%token			E_COMMA			// , + espace devant
 %token			DQUOTE         // "
 %token			EQUAL          // =
 %token			SEMICOLON      // ;
@@ -167,7 +168,7 @@ node:		TAG flattributs open_braces forest CLOSE_BRACES
 			       $flattributs,
 			       NULL);
 		}
-	| node LET name EQUAL tree IN
+	| LET name EQUAL tree IN node
 	| node WHERE name EQUAL tree
 	|	var
 	;
@@ -178,7 +179,6 @@ let:		LET name EQUAL tree SEMICOLON
 		{
 		    //e=process_binding_instruction($name,$node,e);
 		}
-	|	LET name EQUAL tree IN
 	;
 
 blet:		let blet
