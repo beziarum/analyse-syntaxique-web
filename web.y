@@ -29,6 +29,8 @@ extern struct env* e;
 %token			TXTWORD
 %token			TXTEWORD
 %token			BINARYOP
+%token			IN
+%token			WHERE
 
 %token			LET
 
@@ -167,6 +169,8 @@ node:		TAG flattributs open_braces forest CLOSE_BRACES
 			       $flattributs,
 			       NULL);
 		}
+	| node WHERE name EQUAL tree
+	|	var
 	;
 name:		NAME {$$=mk_word($1);}
 	|	TAG {$$=mk_word($1);}
@@ -175,6 +179,7 @@ let:		LET name EQUAL tree SEMICOLON
 		{
 		    //e=process_binding_instruction($name,$node,e);
 		}
+	|	LET name EQUAL tree IN
 	;
 
 blet:		let blet
@@ -183,6 +188,10 @@ blet:		let blet
 	;
 
 app:		BINARYOP string[f1] tree[f2] { $$=mk_app(mk_app($BINARYOP,$f1),$f2);}
+	;
+
+
+var:		name COMMA
 	;
 
 open_braces:	OPEN_BRACES

@@ -29,9 +29,19 @@ LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
                               }
 
 
-let                           {
+let                          {
                                  lastIsSpace=0;
                                  return LET;
+                              }
+
+where                         {
+                              	lastIsSpace=0;
+                              	return WHERE;
+										}
+
+in                            {
+                               lastIsSpace=0;
+                               return IN;
                               }
 
 emit                          {
