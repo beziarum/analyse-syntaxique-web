@@ -168,7 +168,11 @@ node:		TAG flattributs open_braces forest CLOSE_BRACES
 			       $flattributs,
 			       NULL);
 		}
-	| LET name EQUAL tree IN node
+	| LET name EQUAL tree IN node[n2]
+		{
+		    struct ast* fun=mk_fun(mk_word($name),($tree));
+		    $$=mk_app(fun,$n2);
+		}
 	| node WHERE name EQUAL tree
 	|	var
 	;
