@@ -31,6 +31,7 @@ extern struct env* e;
 %token			BINARYOP
 %token			IN
 %token			WHERE
+%token 			FUN
 
 %token			LET
 
@@ -45,7 +46,7 @@ extern struct env* e;
 }
 
 %type	<txt>		TAG ALNUMSUITE TXTWORD NAME
-%type <ast>  node forest word lword string name app BINARYOP tree var
+%type <ast>  node forest word lword string name app BINARYOP tree var fun
 %type <attr> attribut lattributs flattributs
 %debug
 
@@ -210,3 +211,5 @@ slash:		SLASH
 space: 		SPACES
 	|	%empty
 		;
+
+fun :
