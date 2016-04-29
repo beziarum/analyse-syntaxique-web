@@ -7,7 +7,7 @@ struct env* e;
 extern int yydebug;
 int main(void)
 {
-    yydebug=1;
+    yydebug=0;
     e=initial_env;
     yyparse();
     /*struct ast * mot1 = mk_word("tamere ");

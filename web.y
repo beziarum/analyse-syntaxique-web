@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "ast.h"
+#include "import.h"
 #define YYDEBUG 1
 int yylex(void);
 void yyerror(char  *);
@@ -46,8 +47,8 @@ extern struct env* e;
 
 }
 
-%type	<txt>		TAG ALNUMSUITE TXTWORD NAME
-%type <ast>  node forest word lword string name app BINARYOP tree var lname
+%type	<txt>		TAG ALNUMSUITE TXTWORD NAME name
+%type <ast>  node forest word lword string app BINARYOP tree var lname
 %type <attr> attribut lattributs flattributs
 %debug
 
@@ -77,7 +78,7 @@ forest:		forest[f1] forest[f2]
 	|	nforest forest {$$=$2;}
 	|	forest nforest
 	|	tree
-
+		;
 tree:		string
 	|	open_braces forest  CLOSE_BRACES {$$=$2;}
 	|	app {$$=NULL;}
@@ -85,6 +86,8 @@ tree:		string
 		{
 		    $$=$node;
 		}
+	|	var
+
 	;
 
 nforest:	nforest nforest
@@ -170,24 +173,24 @@ node:		TAG flattributs open_braces forest CLOSE_BRACES
 		}
 	| LET name EQUAL tree IN node[n2]
 		{
-		    struct ast* fun=mk_fun(mk_word($name),($tree));
+		    struct ast* fun=mk_fun($name,($tree));
 		    $$=mk_app(fun,$n2);
 		}
 	| node WHERE name EQUAL tree
-	|	var
 	;
-name:		NAME {$$=mk_word($1);}
-	|	TAG {$$=mk_word($1);}
+name:		NAME
+	|	TAG
 
 let:		LET name EQUAL tree SEMICOLON
 		{
-		    //e=process_binding_instruction($name,$node,e);
+		    e=process_binding_instruction($name,$tree,e);
+		    fprintf(stderr,"proc %s\n",$name);
 		}
 	;
 
 blet:		let blet
 	|	app blet {process_instruction($1,e);}
-        //	{process_instruction(mk_app(mk_app(mk_binop(EMIT),mk_word("test")),mk_tree("prout",true,true,false,NULL,NULL)));}
+        //		{process_instruction(mk_app(mk_app(mk_binop(EMIT),mk_word("test")),mk_tree("prout",true,true,false,NULL,NULL)));}
 	|	%empty
 	;
 
@@ -195,7 +198,7 @@ app:		BINARYOP string[f1] tree[f2] { $$=mk_app(mk_app($BINARYOP,$2),$3);}
 	;
 
 
-var:		name COMMA {$$ = mk_var($name->node->str);}
+var:		name COMMA {$$ = mk_var($name);}
 	;
 
 funct:		LET name lname EQUAL tree
