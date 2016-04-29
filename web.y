@@ -127,8 +127,8 @@ lword:		lword[lw1] word
 	;
 
 word:
-			TXTWORD SPACES {printf("eps\n");$$=mk_tree("",true,false,true,NULL,mk_word($1));}
-		|	TXTWORD {printf("nesp\n");$$=mk_word($1);}
+			TXTWORD SPACES 	{$$=mk_tree("",true,false,true,NULL,mk_word($1));}
+		|	TXTWORD 				{$$=mk_word($1);}
 		;
 
 node:		TAG flattributs OPEN_BRACES forest CLOSE_BRACES
