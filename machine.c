@@ -8,88 +8,83 @@
 #include "pattern_matching.h"
 
 void tabulation(int fd,int tab){
-    for (int i = 0; i < tab; i++)
-        dprintf(fd,"  ");
+	for (int i = 0; i < tab; i++)
+	dprintf(fd,"  ");
 }
 
 bool emitfd( int fd,struct ast * ast,int tab){
-    if(ast==NULL)
+	if(ast==NULL)
 	return false;
-    if(ast->type == WORD){
-	//tabulation(fd,tab);
-	dprintf(fd,"%s",ast->node->str);
-	return false;
-    }
-    else if(ast->type == FOREST)
-    {
-        if(emitfd(fd,ast->node->forest->head,tab))
-	    dprintf(fd,"\n");
-            
-	return ast->node->forest->tail !=NULL &&
-	    emitfd(fd,ast->node->forest->tail,tab);
-	    //dprintf(fd,"\n")
-	
-    }
-    else if(ast->type == TREE)
-    {
-	if(strcmp(ast->node->tree->label,"") == 0){
-	    emitfd(fd,ast->node->tree->daughters,tab+1);
-	    if(ast->node->tree->space)
-		dprintf(fd," ");
-	    return false;
+	if(ast->type == WORD){
+		dprintf(fd,"%s",ast->node->str);
+		return false;
 	}
-	if(tab!=0)
-	    dprintf(fd,"\n");
-	if(ast->node->tree->nullary){
-	    tabulation(fd,tab);
-	    dprintf(fd,"<%s",ast->node->tree->label);
-	    struct attributes* attr=ast->node->tree->attributes;
-	    while(attr!=NULL)
-	    {
-		dprintf(fd," ");
-		emitfd(fd,attr->key,tab);
-		dprintf(fd,"=\"");
-		emitfd(fd,attr->value,tab);
-		dprintf(fd,"\"");
-		attr=attr->next;
-	    }
-	    dprintf(fd,"/>");
-	    return true;
+	else if(ast->type == FOREST)
+	{
+		if(emitfd(fd,ast->node->forest->head,tab))
+		dprintf(fd,"\n");
+
+		return ast->node->forest->tail !=NULL &&
+		emitfd(fd,ast->node->forest->tail,tab);
+
+	}
+	else if(ast->type == TREE)
+	{
+		if(strcmp(ast->node->tree->label,"") == 0){
+			emitfd(fd,ast->node->tree->daughters,tab+1);
+			if(ast->node->tree->space)
+			dprintf(fd," ");
+			return false;
+		}
+		if(tab!=0)
+		dprintf(fd,"\n");
+		if(ast->node->tree->nullary){
+			tabulation(fd,tab);
+			dprintf(fd,"<%s",ast->node->tree->label);
+			struct attributes* attr=ast->node->tree->attributes;
+			while(attr!=NULL)
+			{
+				dprintf(fd," ");
+				emitfd(fd,attr->key,tab);
+				dprintf(fd,"=\"");
+				emitfd(fd,attr->value,tab);
+				dprintf(fd,"\"");
+				attr=attr->next;
+			}
+			dprintf(fd,"/>");
+			return true;
+		}
+		else
+		{
+			tabulation(fd,tab);
+			dprintf(fd,"<%s",ast->node->tree->label);
+			struct attributes* attr=ast->node->tree->attributes;
+			while(attr!=NULL)
+			{
+				dprintf(fd," ");
+				emitfd(fd,attr->key,tab);
+				dprintf(fd,"=\"");
+				emitfd(fd,attr->value,tab);
+				dprintf(fd,"\"");
+				attr=attr->next;
+			}
+			dprintf(fd,">");
+			if(ast->node->tree->space)
+			dprintf(fd," ");
+			if(emitfd(fd,ast->node->tree->daughters,tab+1))
+			{
+				dprintf(fd,"\n");
+				tabulation(fd,tab);
+			}
+			dprintf(fd,"</%s>",ast->node->tree->label);
+			return true;
+		}
 	}
 	else
 	{
-            tabulation(fd,tab);
-            /*if(ast->node->tree->daughters->type == FOREST)
-	      dprintf(fd,"tree<%s>",ast->node->tree->label);
-	      else*/
-	    dprintf(fd,"<%s",ast->node->tree->label);
-	    struct attributes* attr=ast->node->tree->attributes;
-	    while(attr!=NULL)
-	    {
-		dprintf(fd," ");
-		emitfd(fd,attr->key,tab);
-		dprintf(fd,"=\"");
-		emitfd(fd,attr->value,tab);
-		dprintf(fd,"\"");
-		attr=attr->next;
-	    }
-	    dprintf(fd,">");
-	    if(ast->node->tree->space)
-		dprintf(fd," ");
-            if(emitfd(fd,ast->node->tree->daughters,tab+1))
-	    {
-		dprintf(fd,"\n");
-		tabulation(fd,tab);
-	    }
-	    dprintf(fd,"</%s>",ast->node->tree->label);
-	    return true;
+		fprintf(stderr,"Dafuck\n");
+		return false;
 	}
-    }
-    else
-    {
-	fprintf(stderr,"Dafuck\n");
-	return false;
-    }
 }
 
 void emit( char * file, struct ast * ast){

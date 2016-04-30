@@ -22,7 +22,7 @@ extern struct env* e;
 %token			E_COMMA			// , + espace devant
 %token			DQUOTE         // "
 %token			EQUAL          // =
-%token 			LPLUS	       // +
+%token 			LPLUS	      	 // +
 %token 			LMINUS	       // -
 %token 			LMULT 	       // *
 %token			SEMICOLON      // ;
@@ -48,27 +48,29 @@ extern struct env* e;
 %token			DOLLAR
 %union
 {
-    struct tree * t;
-    struct attributes * a;
     char* txt;
 		struct ast * ast;
 		struct attributes * attr;
-
+		struct dir * dir;
+		struct path * path;
 }
 
 %type	<txt>		TAG ALNUMSUITE TXTWORD NAME name
 %type <ast>  node forest word lword string BINARYOP tree var lname emit LEMIT
-%type <ast>	 expression cond
+%type <ast>	 cond expr
 %type <attr> attribut lattributs flattributs
+%type <dir> debpath
+%type <path> path reference
+
 %debug
 
 %%
 
+
+
 web:		blet forest
 		{
-		    printf("--------------------------------\n");
-		    //display_tree($2);
-		    printf("\n");
+		    printf("Grammaire acceptante\n");
 		}
 	;
 
@@ -82,13 +84,11 @@ forest:		forest[f1] forest[f2]
 		    {
 		       $$=mk_forest(false,$f1,$f2);
 		    }
-		    //display_tree($f2);
-		    printf("\n");
 		}
 	|	nforest forest {$$=$2;}
 	|	forest nforest
 	|	tree
-		;
+	;
 
 tree:		string
 	|	open_braces forest  CLOSE_BRACES {$$=$2;}
@@ -100,7 +100,7 @@ tree:		string
 	|	var
 	|	cond
 	|	expr
-	|	reference
+	|	reference {$$ = NULL;}
 	;
 
 nforest:	nforest nforest
@@ -115,11 +115,9 @@ flattributs:	OPEN_BRACKET lattributs  CLOSE_BRACKET
 
 lattributs:	attribut  lattributs
 		{
-
 		$1->next = $2;
 		}
 	|	attribut
-
 	;
 
 attribut:	TAG EQUAL string
@@ -193,8 +191,10 @@ node:		TAG flattributs open_braces forest CLOSE_BRACES
 		    $$=mk_app(mk_fun($name,$n2),$t1);
 		}
 	;
+
 name:		NAME
 	|	TAG
+	;
 
 let:		LET name EQUAL tree SEMICOLON
 		{
@@ -206,7 +206,6 @@ let:		LET name EQUAL tree SEMICOLON
 blet:		blet let
 	|	blet funct SEMICOLON
 	|	blet emit SEMICOLON {process_instruction($2,e);}
-        //		{process_instruction(mk_app(mk_app(mk_binop(EMIT),mk_word("test")),mk_tree("prout",true,true,false,NULL,NULL)));}
 	|	%empty
 	;
 
@@ -231,9 +230,6 @@ open_braces:	OPEN_BRACES
 	|	E_OPEN_BRACES
 	;
 
-open_bracket:	OPEN_BRACKET
-	|	E_OPEN_BRACKET
-	;
 
 slash:		SLASH
 	|	E_SLASH
@@ -241,26 +237,26 @@ slash:		SLASH
 
 space: 		SPACES
 	|	%empty
-		;
+	;
 
 expr:		tree BINARYOP tree
-		;
+	;
 
 cond: IF tree THEN tree ELSE tree
 		{$$=mk_cond($2, $4, $6);}
-		;
-
-
-path:			SLASH name
-	|			path SLASH name
 	;
 
-debpath: 	DOLLAR name path
-	|			DOLLAR point name path
-	|			DOLLAR name
+
+path:			SLASH name {$$=NULL;}
+	|			path SLASH name {$$=NULL;}
 	;
 
-reference: 	debpath ARROW name
+debpath: 	DOLLAR name path	{$$=NULL;}
+	|			DOLLAR point name path {$$=NULL;}
+	|			DOLLAR name {$$=NULL;}
+	;
+
+reference: 	debpath ARROW name {$$=NULL;}
 	;
 
 point: POINT
