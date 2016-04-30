@@ -86,6 +86,7 @@ forest:		forest[f1] forest[f2]
 	|	forest nforest
 	|	tree
 		;
+
 tree:		string
 	|	open_braces forest  CLOSE_BRACES {$$=$2;}
 	|	emit {$$=NULL; process_instruction($1,e);}
@@ -95,7 +96,7 @@ tree:		string
 		}
 	|	var
 	|	cond
-
+	|	expr
 	;
 
 nforest:	nforest nforest
@@ -198,9 +199,9 @@ let:		LET name EQUAL tree SEMICOLON
 		}
 	;
 
-blet:		let blet
-	|	funct blet
-	|	emit blet {process_instruction($1,e);}
+blet:		blet let
+	|	blet funct
+	|	blet emit {process_instruction($2,e);}
         //		{process_instruction(mk_app(mk_app(mk_binop(EMIT),mk_word("test")),mk_tree("prout",true,true,false,NULL,NULL)));}
 	|	%empty
 	;
