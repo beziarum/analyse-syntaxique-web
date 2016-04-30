@@ -22,7 +22,7 @@
 
 \section{Présentation du projet}
 Le projet d'analyse syntaxique consistait en la réalisation d'un compilateur
-de site web qui retourne un code html propre à partir d'un code source "factice"
+de site web qui retourne un code html valide à partir d'un code source "factice"
 donné par l'énoncé.
 \newline
 L'énoncé proposait plusieurs étapes au développement permettant une avancée
@@ -47,14 +47,14 @@ permettant d'accepter le premiere éxemple du code factice donné dans l'énonc�
 
 \subsection{Les structures}
 
-Pour commencer ce projet, nous nous somme penchés sur la gestion des strutures
+Pour commencer ce projet, nous nous sommes penchés sur la gestion des strutures
 "tree" et "attributes" données par l'énoncé. Nous avons implémenté les créateurs et les
 libérateurs ainsi que les accesseurs et les modificateurs. Rien de très compliqué a ce niveau
 là, la dificulté était de bien tout construire au niveau de l'analyseur syntaxique.
 
 \subsection{L'analyseur lexical}
 
-Nous nous somme ensuite penchés sur l'analyseur lexical. Nous voulions essayer de
+Nous nous sommes ensuite penchés sur l'analyseur lexical. Nous voulions essayer de
 minimiser le plus possible le traitement au niveau de flex afin que tout soit géré
 par notre grammaire dans l'analyseur syntaxique. Nous avons donc implémenté
 quelque chose de très simple qui se contente de renvoyer des tokens pour tous les
@@ -63,7 +63,7 @@ particulières.
 
 \subsection{L'analyseur syntaxique}
 
-Nous somme ensuite ataqués à l'analyseur syntaxique, la partie centrale de ce projet.
+Nous sommes ensuite ataqués à l'analyseur syntaxique, la partie centrale de ce projet.
 Nous avons défini une suite de règles plutôt simples dans un premier temps. Le but
 n'etait pas encore de tester si nos arbres et nos forêts s'imbriquaient comme il fallait,
 mais simplement de vérifier que nous avions une grammaire acceptante quand c'etait
@@ -96,40 +96,40 @@ Nous avons alors réussi a obtenir une grammaire satisfaisante.
 
 \section{Le compilateur}
 
-Notre programme commencant a reconaitre les premier élément de sintaxe
-du code donné par l'énoncer nous nous somme lancé sur la réalisation de notre
-premiere vrais compilation.
+Notre programme commençant à reconnaitre les premiers éléments de syntaxe
+du code donné par l'énoncé, nous nous sommes lancés sur la réalisation de notre
+première vraie compilation.
 \newline
 \newline
-Mais nous avons alors été confronté au changemen de sujet concernant les structures
-et leur implementations.
+Mais nous avons alors étés confrontés au changement de sujet concernant les structures
+et leur implementation.
 
-\subsection{Changement total des structure}
+\subsection{Changement total des structures}
 
-Le sujet a donc proposé une nouvelle implémentation des structure (deja au point) afin de nous
-permettre de nous concentré essentielement sur l'analyse sintaxique(qui est effectivement
-le veritable objectif de cette UE). Mais il était cependant parfois difficile de comprendre
-le fonctionnement de se code, et de bien gérer les structure pour quelle gére les donnée
-de la maniere attendu. La gestion des structure resté donc un probleme difficile
-a gérer.
+Le sujet a donc proposé une nouvelle implémentation des structures (déjà au point) afin de nous
+permettre de nous concentrer essentiellement sur l'analyse syntaxique (qui est effectivement
+le veritable objectif de cette UE). Cependant il était parfois difficile de comprendre
+le fonctionnement de ce code, et de bien gérer les structures pour qu'elles gérent les données
+de la manière attendue. La gestion des structures restait donc un problème difficile
+à gérer.
 
-\subsection{la fonction emit}
+\subsection{La fonction emit}
 
-L'implementation donné par le sujet n'étais pas encore tout a fait complete.
-Il resté nottament a implémenté la fonction emit qui devait se charger de recupéré
-notre arborescence de structure pour réecrire les donnée sous la forme d'un code
+L'implementation donnée dans le sujet n'était pas encore tout à fait complète.
+Il restait notamment à implémenter la fonction emit qui se charge de recupérer
+notre arborescence de structure pour réecrire les données sous la forme d'un code
 html valide dans un fichier.
 \newline
 \newline
-Si une fois les nouvelle structure comprise l'écriture des balises n'etais pas
-d'une grande difficulté. La gestion des indentation et des retour a la ligne
-étais quand a elle plus complexe. Nous avons dans un premier temps opté pour
-une fonction recursive qui intégre dans ces parametre une variable indiquant
-le nombre d'indentation a éffectuer. Nous retournons également un boolean qui
-nous aide a déterminé celon les cas si le retour a la ligne est necessaire ou pas.
+Une fois les nouvelles structures comprises, l'ecriture des balises n'était pas
+d'une grande difficulté. La gestion des indentations et des retours à la ligne
+était quand à elle plus complexe. Nous avons dans un premier temps opté pour
+une fonction récursive qui intègre dans ses parametres une variable indiquant
+le nombre d'indentation a éffectuer. Nous retournons également un booléen qui
+nous aide à déterminer, selon les cas, si le retour à la ligne est nécessaire ou pas.
 \newline
-a se stade le resultat n'etais pas parfait mais convainquant et sufisament claire
-pour commencer les test.
+A ce stade, le résultat n'etait pas parfait mais convainquant et suffisamment clair
+pour commencer les tests.
 
 
 \subsection{les premieres compilation}
