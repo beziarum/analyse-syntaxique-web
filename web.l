@@ -15,7 +15,6 @@ LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
 
 %%
 
-
 <TXT>\"                       {
                                  BEGIN INITIAL;
                                  lastIsSpace=0;
@@ -60,16 +59,26 @@ fun                           {
                                  return LFUN;
                               }
 
+if                            {
+                              lastIsSpace=0;
+                              return IF;
+                              }
+
+then                          {
+                              lastIsSpace=0;
+                              return THEN;
+                              }
+
+else                          {
+                              lastIsSpace=0;
+                              return ELSE;
+                              }
+
 [+*]                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_word(strdup(yytext));
                                  return BINARYOP;
                               }
-
-fun                           {
-                              lastIsSpace=0;
-                              return FUN;
-                              }                             
 
 [xX][mM][lL]{LEX_LABEL}       {
                                  lastIsSpace=0;
@@ -140,11 +149,8 @@ fun                           {
 
 \,                            {
                                  int tmp=lastIsSpace;
-                                 lastIsSpace=0;
-											if(tmp)
-												return E_COMMA;
-											else
-                                 	return COMMA;
+                                 lastIsSpace=0;										if(tmp)											return E_COMMA;										else
+                               return COMMA;
                               }
 
 \;                            {
