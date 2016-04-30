@@ -148,16 +148,38 @@ des attributs et de l'operateur emit).
 
 \section{Enrichissement de la syntaxe}
 
+La premiere partie étant bien maitrisé nous nous somme lancé dans l'enrichissement
+de la gestion de la syntaxe du language
+
 \subsection{Les variables}
 
+Les variables n'étais pas la partie la plus dure a gérer du point de vus de
+la grammaire. Nous avons décidé de gérer indépendament les variables qui commence
+en début de fichier comme une suite de déclaration et les variable local.
+Nous avons définit quelque token suplémentaire, ajouter quelque régle a la
+grammaire et le résultat a vite était satisfaisant.
+\newline
+Mais la gestion de ces variable au sein des structure fut plus compliqué.
+En effet nous avençon a taton quand au fonctionnement de la machine virtuel. Et
+nous mettons du temps a chaque nouvelle action qu'il faut effectuer sur ces
+derniere.
+
+\subsection{Les fonctions}
+
+
+\subsection{Les expressions conditionnelles}
+
+
+\newpage
 \section{Conclusion}
 
 \subsection{Etat d'avancement du projet}
 
 Une estimation de l'avancement du projet.
+\newline
 
 \newcolumntype{M}[1]{>{\raggedright}m{#1}}
-\begin{tabular}{|M{3cm}|M{3cm}|M{3cm}}
+\begin{tabular}{|M{3cm}|M{3cm}|M{3cm}|}
     \hline
     objectif & grammaire & gestion de l'arborescence \tabularnewline
     \hline
@@ -168,6 +190,8 @@ Une estimation de l'avancement du projet.
     fonction & validé & non validé \tabularnewline
     \hline
     condition & validé & non validé \tabularnewline
+    \hline
+    gestion sur plusieur fichier & non validé & non validé \tabularnewline
     \hline
  \end{tabular}
 
