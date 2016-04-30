@@ -79,15 +79,15 @@ Les espaces représentaient le premier élément compliqué à gérer. il doiven
 d'autres fois non. Il est difficile de gérer dans la grammaire tous ces cas de figure.
 Dans un premier temps, nous avons défini une regle "SPACES: SPACES | %empty", et nous
 avons mis des SPACES un peu partout dans la grammaire. Mais celà entrainait 2 problèmes :
-le premier était que même si notre grammaire devenait acceptante sur les bons fichiers, 
+le premier était que même si notre grammaire devenait acceptante sur les bons fichiers,
 elle l'était aussi à des moments où elle n'aurait pas du l'être. Le deuxième était un
 nombre phénoménal de conflits reduction/réduction (+ de 50).
 \newline
 Nous avons donc décidé après réfléxion de nous résoudre a complexifier le code lex
-afin d'éffectuer un poste traitement sur les espaces à accepter ou non.
+afin d'éffectuer un prés traitement sur les espaces à accepter ou non.
 Nous avons défini un état ainsi qu'une variable "lastIsSpace" chargée de mémoriser
-si les derniers caractères etaient des espaces. Celà nous a permi de ne retourner les
-espaces que quand celà était vraiment nécessaire et d'énormement simplifier la grammaire.
+si les derniers caractères etaient des espaces. Celà nous a permi de ne retourner des token
+différent quand il été précéder d'un espace et ainsi d'énormement simplifier la grammaire.
 Nous avons alors réussi a obtenir une grammaire satisfaisante.
 
 
@@ -134,9 +134,22 @@ pour commencer les test.
 
 \subsection{les premieres compilation}
 
-Des les premiere tentative.
+Des les premieres tentative. Nous avons eu de nombreuse erreur du a la mauvaise
+gestion des structures. Nous n'avions nottament pas compris comment chainer
+les mots. Nous avons décidé de les considérer comme des foret qui s'empile les
+une aprés les autre jusqua se que tout les mot de la chaine soit insérer.
+Aprés quelque ajustement et correction nous avons obtenue un programme qui
+compiler correctement le code factice dans sa version simple.(gestion des noeud,
+des attribut et de l'operateur emit).
 
 \newpage
+
+
+\section{enrichisement de la sintaxe}
+
+\subsection{les variables}
+
+
 
 \section{Conclusion}
 c'était cool
