@@ -51,7 +51,7 @@ in                            {
 emit                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(EMIT);
-                                 return BINARYOP;
+                                 return LEMIT;
                               }
 
 fun                           {
@@ -165,16 +165,19 @@ else                          {
 
 \+                            {
                               lastIsSpace=0;
-                              return PLUS;
+                              yylval.ast=mk_binop(PLUS);
+                              return BINARYOP;
                               }
 
 \-                            {
                               lastIsSpace=0;
-                              return MINUS;
+                              yylval.ast=mk_binop(MINUS);
+                              return BINARYOP;
                               }
 
 \*                           {
                               lastIsSpace=0;
+                              yylval.ast=mk_binop(MULT);
                               return MULT;
                               }
 
