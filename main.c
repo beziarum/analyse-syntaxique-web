@@ -1,21 +1,32 @@
-
-#include <stdio.h>
 #include <stdlib.h>
-#include "struct.h"
-
-
-int main (int argc , char** argv){
-  attributes a = attributes_create("caca","val");
-  tree t10 = tree_create("tamere 10",true,true,WORD,a,NULL,NULL);
-  tree t9 = tree_create("tamere 9",true,true,WORD,a,t10,NULL);
-  tree t8 = tree_create("tamere 8",true,true,WORD,a,NULL,t9);
-  tree t7 = tree_create("tamere 7",true,true,WORD,a,NULL,NULL);
-  tree t6 = tree_create("tamere 6",true,true,WORD,a,NULL,NULL);
-  tree t5 = tree_create("tamere 5",true,true,WORD,a,t8,t7);
-  tree t4 = tree_create("tamere 4",true,true,WORD,a,NULL,NULL);
-  tree t3 = tree_create("tamere 3",true,true,WORD,a,t5,NULL);
-  tree t2 = tree_create("tamere 2",true,true,WORD,a,t4,t6);
-  tree t1 = tree_create("tamere 1",true,true,WORD,a,t2,t3);
-  display_tree(t1);
-  return 1;
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include "web.tab.h"
+#include "import.h"
+struct env* initial_env;
+struct env* e;
+extern int yydebug;
+int main(int argc, char** argv)
+{
+    yydebug=0;
+    e=initial_env;
+    if(argc>=2)
+    {
+	int fd=open(argv[1],O_RDONLY);
+	if(fd == -1)
+	{
+	    perror("open");
+	    return EXIT_FAILURE;
+	}
+	dup2(fd,STDIN_FILENO);
+	close(fd);
+    }
+    yyparse();
+    /*struct ast * mot1 = mk_word("tamere ");
+    struct ast * mot2 = mk_word("tamere2");
+    struct ast * forest = mk_forest(true,mot1,mot2);
+    struct ast * app = mk_app(mk_app(mk_binop(EMIT),mk_word("test.html")),forest);
+    process_instruction(app,e);*/
+    return 0;
 }

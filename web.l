@@ -73,12 +73,6 @@ else                          {
                                  return ELSE;
                               }
 
-[+*]                          {
-                                 lastIsSpace=0;
-                                 yylval.ast=mk_word(strdup(yytext));
-                                 return BINARYOP;
-                              }
-
 [xX][mM][lL]{LEX_LABEL}       {
                                  lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
