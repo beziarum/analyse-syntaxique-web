@@ -94,9 +94,47 @@ Nous avons alors réussi a obtenir une grammaire convainquante.
 
 \newpage
 
-\section{La gestion des variables}
-\subsection{sous partie 2}
-yepyepyep
+\section{Le compilateur}
+
+Notre programme commencant a reconaitre les premier élément de sintaxe
+du code donné par l'énoncer nous nous somme lancé sur la réalisation de notre
+premiere vrais compilation.
+\newline
+\newline
+Mais nous avons alors été confronté au changemen de sujet concernant les structures
+et leur implementations.
+
+\subsection{Changement total des structure}
+
+Le sujet a donc proposé une nouvelle implémentation des structure (deja au point) afin de nous
+permettre de nous concentré essentielement sur l'analyse sintaxique(qui est effectivement
+le veritable objectif de cette UE). Mais il était cependant parfois difficile de comprendre
+le fonctionnement de se code, et de bien gérer les structure pour quelle gére les donnée
+de la maniere attendu. La gestion des structure resté donc un probleme difficile
+a gérer.
+
+\subsection{la fonction emit}
+
+L'implementation donné par le sujet n'étais pas encore tout a fait complete.
+Il resté nottament a implémenté la fonction emit qui devait se charger de recupéré
+notre arborescence de structure pour réecrire les donnée sous la forme d'un code
+html valide dans un fichier.
+\newline
+\newline
+Si une fois les nouvelle structure comprise l'écriture des balises n'etais pas
+d'une grande difficulté. La gestion des indentation et des retour a la ligne
+étais quand a elle plus complexe. Nous avons dans un premier temps opté pour
+une fonction recursive qui intégre dans ces parametre une variable indiquant
+le nombre d'indentation a éffectuer. Nous retournons également un boolean qui
+nous aide a déterminé celon les cas si le retour a la ligne est necessaire ou pas.
+\newline
+a se stade le resultat n'etais pas parfait mais convainquant et sufisament claire
+pour commencer les test.
+
+
+\subsection{les premieres compilation}
+
+Des les premiere tentative.
 
 \newpage
 
