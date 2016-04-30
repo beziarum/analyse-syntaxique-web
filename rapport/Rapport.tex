@@ -34,7 +34,7 @@ Le programme est composé de 3 parties différentes. l'analyseur lexical (en lan
 l'analyseur syntaxique permettant de gérer la grammaire (en langage bison) et les structures
 permettant le traitement des données et leur transformation en code html (en langage C).
 \newline
-A chacune des étapes de dévelopement, il s'agissait de vérifier dans un premier
+A chacune des étapes de développement, il s'agissait de vérifier dans un premier
 temps la qualité de la grammaire (si elle accepte ce qu'elle doit et refuse
 le code invalide), et dans un second temps la bonne gestion de nos structures
 et du traitement réalisé sur les données afin de les compiler en code html valide.
@@ -44,7 +44,7 @@ et du traitement réalisé sur les données afin de les compiler en code html va
 \section{Les premieres forêts}
 
 Notre premier objectif était d'implementer un début d'analyseur lexical et syntaxique
-permettant d'accepter le premiere éxemple du code factice donné dans l'énoncé.
+permettant d'accepter le premiere exemple du code factice donné dans l'énoncé.
 
 \subsection{Les structures}
 
@@ -59,19 +59,19 @@ Nous nous sommes ensuite penchés sur l'analyseur lexical. Nous voulions essayer
 minimiser le plus possible le traitement au niveau de flex afin que tout soit géré
 par notre grammaire dans l'analyseur syntaxique. Nous avons donc implémenté
 quelque chose de très simple qui se contente de renvoyer des tokens pour tous les
-characters ou mots que nous pensions nécessaires. Cela sans gestion d'états ou actions
+caractères ou mots que nous pensions nécessaires. Celà sans gestion d'états ou actions
 particulières.
 
 \subsection{L'analyseur syntaxique}
 
-Nous sommes ensuite ataqués à l'analyseur syntaxique, la partie centrale de ce projet.
+Nous sommes ensuite attaqués à l'analyseur syntaxique, la partie centrale de ce projet.
 Nous avons défini une suite de règles plutôt simples dans un premier temps. Le but
 n'etait pas encore de tester si nos arbres et nos forêts s'imbriquaient comme il fallait,
 mais simplement de vérifier que nous avions une grammaire acceptante quand c'etait
 le cas et de retourner une erreur le reste du temps.
 \newline
 Outre toutes les petites difficultés classiques dues à notre manque d'expérience
-sur la gestion des grammaires, Nous avons rencontré ici notre première
+sur la gestion des grammaires, nous avons rencontré ici notre première
 grosse dificulté.
 
 \subsubsection{La gestion des espaces}
@@ -85,10 +85,10 @@ elle l'était aussi à des moments où elle n'aurait pas du l'être. Le deuxièm
 nombre phénoménal de conflits reduction/réduction (+ de 50).
 \newline
 Nous avons donc décidé après réfléxion de nous résoudre a complexifier le code lex
-afin d'éffectuer un prés traitement sur les espaces à accepter ou non.
+afin d'effectuer un pré traitement sur les espaces à accepter ou non.
 Nous avons défini un état ainsi qu'une variable "lastIsSpace" chargée de mémoriser
-si les derniers caractères etaient des espaces. Celà nous a permi de ne retourner des token
-différent quand il été précéder d'un espace et ainsi d'énormement simplifier la grammaire.
+si les derniers caractères etaient des espaces. Celà nous a permi de retourner des tokens
+différents quand ils étaient précédés d'un espace et ainsi d'énormément simplifier la grammaire.
 Nous avons alors réussi a obtenir une grammaire satisfaisante.
 
 
@@ -110,7 +110,7 @@ et leur implementation.
 Le sujet a donc proposé une nouvelle implémentation des structures (déjà au point) afin de nous
 permettre de nous concentrer essentiellement sur l'analyse syntaxique (qui est effectivement
 le veritable objectif de cette UE). Cependant il était parfois difficile de comprendre
-le fonctionnement de ce code, et de bien gérer les structures pour qu'elles gérent les données
+le fonctionnement de ce code, et de bien gérer les structures pour qu'elles gèrent les données
 de la manière attendue. La gestion des structures restait donc un problème difficile
 à gérer.
 
@@ -124,12 +124,12 @@ html valide dans un fichier.
 \newline
 Une fois les nouvelles structures comprises, l'ecriture des balises n'était pas
 d'une grande difficulté. La gestion des indentations et des retours à la ligne
-était quand à elle plus complexe. Nous avons dans un premier temps opté pour
+était quant à elle plus complexe. Nous avons dans un premier temps opté pour
 une fonction récursive qui intègre dans ses parametres une variable indiquant
-le nombre d'indentation a éffectuer. Nous retournons également un booléen qui
+le nombre d'indentations a effectuer. Nous retournons également un booléen qui
 nous aide à déterminer, selon les cas, si le retour à la ligne est nécessaire ou pas.
 \newline
-A ce stade, le résultat n'etait pas parfait mais convainquant et suffisamment clair
+A ce stade, le résultat n'était pas parfait mais convainquant et suffisamment clair
 pour commencer les tests.
 
 
@@ -138,7 +138,7 @@ pour commencer les tests.
 Dès les premières tentatives, nous avons eu de nombreuses erreurs dues à la mauvaise
 gestion des structures. Nous n'avions notamment pas compris comment chainer
 les mots. Nous avons décidé de les considérer comme des forêts qui s'empilent les
-une aprés les autres jusqu'à ce que tous les mots de la chaine soient insérés.
+unes aprés les autres jusqu'à ce que tous les mots de la chaine soient insérés.
 Aprés quelques ajustements et corrections, nous avons obtenu un programme qui
 compilait correctement le code factice dans sa version simple (gestion des noeuds,
 des attributs et de l'operateur emit).
@@ -157,7 +157,7 @@ Les variables n'étaient pas la partie la plus dure à gérer du point de vue de
 la grammaire. Nous avons décidé de gérer indépendamment les variables situées
 en début de fichier comme par exemple une suite de déclarations, et les variables locales.
 Nous avons défini quelques tokens suplémentaires, ajouté quelques régles à la
-grammaire et le résultat a vite était satisfaisant.
+grammaire et le résultat a vite été satisfaisant.
 \newline
 Mais la gestion de ces variables au sein des structures fut plus compliquée.
 En effet, nous avançons à taton quant au fonctionnement de la machine virtuelle, et
@@ -197,11 +197,11 @@ Une estimation de l'avancement du projet.
  \end{tabular}
 
 \subsection{Le mot de la fin}
-Nous avons trouvé que ce projet était de loin le plus dur que nous ayons eu a
+Nous avons trouvé que ce projet était de loin le plus compliqué que nous ayons eu a
 faire au sein de la licence informatique. Long, difficile à comprendre et
 à appréhender ainsi que complexe a réaliser. C'est la premiere fois
-que nous narrivons pas au bout du sujet dans les temps impartis, et meme un
-delai suplémentaire ne nous aurait pas garanti d'arriver à terme du projet.
+que nous n'arrivons pas au bout du sujet dans les temps impartis, et même un
+delai supplémentaire ne nous aurait pas garanti d'arriver à terme du projet.
 \newline
 \newline
 
