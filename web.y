@@ -64,6 +64,7 @@ web:		blet forest
 		    //display_tree($2);
 		    printf("\n");
 		}
+		| expression-cond blet forest
 	;
 
 
@@ -210,7 +211,7 @@ funct:		LET name lname EQUAL tree
 	|	LET name lname EQUAL LFUN lname ARROW tree
 	;
 
-lname:		lname[ln] name {$$=mk_forest($ln,mk_word($name));}
+lname:		lname[ln] name {$$=mk_forest(false,$ln,mk_word($name));}
 	|	name {$$=mk_word($name);}
 	;
 
@@ -236,4 +237,5 @@ expression-cond : IF expression THEN expression ELSE expression
 
 expression : funct
 	| let
+	| TAG
 	| expression-cond
