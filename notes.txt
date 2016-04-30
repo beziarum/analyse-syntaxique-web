@@ -1,0 +1,35 @@
+Liste des terminaux
+
+MATCH : match
+WITH  : with
+END   : end
+BARE  :  |
+ARROW        : ->
+UNDERSCORE   : _
+OPEN_BRACES  : {
+CLOSE_BRACES : }
+UNDERSCORE   : _
+STAR         : *
+SLASH        : /
+
+Grammaire
+
+pattern -> MATCH tree WITH lrule END
+
+lrule -> rule
+lrule -> lrule rule
+
+rule -> BARE pcond ARROW tree
+
+pcond -> UNDERSCORE
+pcond -> UNDERSCORE OPEN_BRACES forest CLOSE_BRACES
+pcond -> TAG OPEN_BRACES forest CLOSE_BRACES
+dcond -> OPEN_BRACES lvar filtre CLOSE_BRACES
+dcond -> OPEN_BRACES CLOSE_BRACES
+dcond -> OPEN_BRACES filtre CLOSE_BRACES
+dcond -> filtre
+
+filtre -> SLASH UNDERSCORE SLASH
+filtre -> STAR UNDERSCORE STAR
+filtre -> STAR var STAR
+filtre -> SLAS var SLASH
