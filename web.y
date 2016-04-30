@@ -48,21 +48,25 @@ extern struct env* e;
 %token			DOLLAR
 %union
 {
-    struct tree * t;
-    struct attributes * a;
     char* txt;
 		struct ast * ast;
 		struct attributes * attr;
-
+		struct dir * dir;
+		struct path * path;
 }
 
 %type	<txt>		TAG ALNUMSUITE TXTWORD NAME name
 %type <ast>  node forest word lword string BINARYOP tree var lname emit LEMIT
-%type <ast>	 expression cond
+%type <ast>	 cond expr
 %type <attr> attribut lattributs flattributs
+%type <dir> debpath
+%type <path> path reference
+
 %debug
 
 %%
+
+
 
 web:		blet forest
 		{
@@ -100,7 +104,7 @@ tree:		string
 	|	var
 	|	cond
 	|	expr
-	|	reference
+	|	reference {$$ = NULL;}
 	;
 
 nforest:	nforest nforest
@@ -231,9 +235,6 @@ open_braces:	OPEN_BRACES
 	|	E_OPEN_BRACES
 	;
 
-open_bracket:	OPEN_BRACKET
-	|	E_OPEN_BRACKET
-	;
 
 slash:		SLASH
 	|	E_SLASH
@@ -251,16 +252,16 @@ cond: IF tree THEN tree ELSE tree
 		;
 
 
-path:			SLASH name
-	|			path SLASH name
+path:			SLASH name {$$=NULL;}
+	|			path SLASH name {$$=NULL;}
 	;
 
-debpath: 	DOLLAR name path
-	|			DOLLAR point name path
-	|			DOLLAR name
+debpath: 	DOLLAR name path	{$$=NULL;}
+	|			DOLLAR point name path {$$=NULL;}
+	|			DOLLAR name {$$=NULL;}
 	;
 
-reference: 	debpath ARROW name
+reference: 	debpath ARROW name {$$=NULL;}
 	;
 
 point: POINT
