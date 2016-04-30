@@ -12,6 +12,7 @@ LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
 
 
 %s TXT
+%x IMPORT
 
 %%
 
@@ -176,6 +177,11 @@ else                          {
 \*                           {
                               lastIsSpace=0;
                               return MULT;
+                              }
+
+\$                            {
+                              	lastIsSpace=0;
+                              	BEGIN IMPORT;
                               }
 
 %%
