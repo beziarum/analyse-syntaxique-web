@@ -66,6 +66,11 @@ fun                           {
                                  return BINARYOP;
                               }
 
+fun                           {
+                              lastIsSpace=0;
+                              return FUN;
+                              }                             
+
 [xX][mM][lL]{LEX_LABEL}       {
                                  lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
