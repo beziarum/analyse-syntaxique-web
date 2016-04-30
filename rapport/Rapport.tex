@@ -1,6 +1,6 @@
 \documentclass[12pt]{article}
 
-\usepackage[T1]{fontenc} 
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[francais]{babel}
 \usepackage{hyperref}
@@ -21,26 +21,82 @@
 
 
 \section{Présentation du projet}
-présenter le projet...
-\newline\newline
-
-différentes parties du projet :
-\begin{itemize}
-\item partie 1
-\item partie 2
-\end{itemize}
+Le projet d'analyse sintaxique consistait en la réalisation d'un compilateur
+de site web qui retourne un code propre html a partir d'un code source "factice"
+donné par l'énoncer.
+\newline
+L'énoncer proposé plusieur étape au développement permettant une avancé
+pas a pas des possibilité offerte par ce code factice et de sa gestion
+par le compilateur.
+\newline
+Le programme est composé de 3 parties différente. l'analyseur lexical (en flex) ,
+l'analyseur sintaxique permettant de gérer la grammaire (en bison) et les structure
+perméttant le traitement des donné et leur transformation en code html (en C).
+\newline
+A chacune des étapes de dévelopement il s'agissait de vérifier dans un premier
+temps la qualité de la grammaire (si elle accepte se qu'elle doit et refuse
+le code invalide). Et dans un second temps la bonne gestion de nos structure
+et du traitement réalisé sur les donnés afin de les compilé en code html valide.
 
 \newpage
 
-\section{Partie 1}
-\subsection{sous partie 1}
-blablabla
+\section{Les premiere foret}
+
+Notre premier objectif étais d'implementer un début d'analyseur lexical et sintaxique
+permettant d'accepter le premiere éxemple du code factice donné dans l'énoncer.
+
+\subsection{les structures}
+
+Pour commencer se projet nous nous somme penché sur la gestion des struture
+"tree" et "attributes" donné par l'énoncer. Nous avons implémenté les créateurs et les
+libérateurs ainsi que les accesseur et les modificateur. Rien de trés compliqué a se niveau
+la la dificulté allait étre de bien tout construire au niveau de l'analyseur sintaxique.
+
+\subsection{l'analyseur lexical}
+
+Nous nous somme ensuite penché sur l'analyseur lexical. Nous voulions essayé de
+minimisé au plus possible le traitement au niveau de flex afin que tout soit gérer
+par notre gramaire dans lanalyseur sintaxique. Nous avons donc implémenter
+quelque chose de trés simple qui se contente de renvoyer des token pour tout les
+character ou mot que nous penssion nécessaire. Cela sans gestion d'état ou action
+particuliere.
+
+\subsection{l'analyseur sintaxique}
+
+Nous somme ensuite ataqué a l'nalyseur sintaxique. La partie central de se projet.
+Nous avons définit une suite de régle plutot simple dans un premier temps. Le but
+n'etais pas encore de testé si nos arbre et nos foret s'imbriqué comme il fallait
+mais simplement de vérifier que nous avions une grammaire acceptante quand c'etait
+le cas et retourné une erreur le reste du temps.
+\newline
+Outre toute les petites difficulté classique ,due a notre manque d'expérience
+sur la gestion des grammaire. Nous avons rencontré ici notre premiere
+grosse dificulté.
+
+\subsubsection{la gestion des espaces}
+
+Les espaces étais le premier élément compliqué a gérer. il doive parfois étre accepter
+d'autre fois non. Et il est dificile de gérer dans la grammaire tout ces cas de figure
+Dans un premier temps nous avons définit une regle "SPACES: SPACES | %empty". Et nous
+avons mis des SPACES un peu partout dans la grammaire. Mais cela a entrainer 2 probleme
+le premier étais que meme si notre grammaire devenait acceptante sur les bon fichier
+elle l'étais aussi a des moment ou elle n'aurait pas du l'étre. le deuxieme étais un
+nombre phénoménal de conflit reduction/réduction (+ de 50).
+\newline
+Nous avons donc décider aprés réfléxion de nous résoudre a compléxifier le code lex
+afin d'éffectuer un poste traitement sur les espace a accepter ou non.
+Nous avons définit un etat ainsi qu'une variable "lastIsSpace" charger de mémorisé
+si les dernier charactere etais des espaces. Cela nous a permit de ne retourné les
+espace que quand cela étais vraiment necessaire et d'énormement simplifier la grammaire.
+Nous avons alors réussi a obtenir une grammaire convainquante.
+
+
 
 \newpage
 
-\section{Partie 2}
+\section{La gestion des variables}
 \subsection{sous partie 2}
-yepyepyep 
+yepyepyep
 
 \newpage
 
@@ -51,3 +107,4 @@ c'était cool
 
 
 \end{document}
+\grid
