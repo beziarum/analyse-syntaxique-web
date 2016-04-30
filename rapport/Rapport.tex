@@ -157,7 +157,9 @@ Les variables n'étaient pas la partie la plus dure à gérer du point de vue de
 la grammaire. Nous avons décidé de gérer indépendamment les variables situées
 en début de fichier comme par exemple une suite de déclarations, et les variables locales.
 Nous avons défini quelques tokens suplémentaires, ajouté quelques régles à la
-grammaire et le résultat a vite été satisfaisant.
+grammaire et le résultat a vite été satisfaisant. Nous avons cepandant de ne pas
+implémenter la possibilité d'omettre la virgule à la suite d'une variable si elle se
+trouve en fin de block.
 \newline
 Mais la gestion de ces variables au sein des structures fut plus compliquée.
 En effet, nous avançons à taton quant au fonctionnement de la machine virtuelle, et
@@ -184,7 +186,8 @@ ce point ont été acceptés tandis que les non valides ne l'ont pas été.
 \subsection{Les patterns}
 Au moment d'implémenter ce point nous commancions à être pris par le temps. Nous avons donc
 décidé de nous concentrer sur d'autres points tels que le nettoyage de code ou la rédaction
-du rapport.
+du rapport. Nous n'avons donc pas implémenté cette fonctionnalitée mais nous avons la 
+grammaire théorique, que nous avons écrit dans le fichier « notesPatterns.txt »
 
 
 
@@ -204,7 +207,7 @@ Une estimation de l'avancement du projet.
     \hline
     noeud et attributs &  fonctionnel & fonctionnel \tabularnewline
     \hline
-    variable & fonctionnel & fonctionnel \tabularnewline
+    variable & partiel & fonctionnel \tabularnewline
     \hline
     fonction & fonctionnel & non fonctionnel \tabularnewline
     \hline
@@ -213,6 +216,7 @@ Une estimation de l'avancement du projet.
     gestion sur plusieur fichier & fonctionnel & non fonctionnel \tabularnewline
     \hline
     pattern & théorie fait & non fonctionnel \tabularnewline
+    \hline
  \end{tabular}
 
 \subsection{Le mot de la fin}
