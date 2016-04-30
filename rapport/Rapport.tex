@@ -21,74 +21,74 @@
 
 
 \section{Présentation du projet}
-Le projet d'analyse sintaxique consistait en la réalisation d'un compilateur
-de site web qui retourne un code propre html a partir d'un code source "factice"
-donné par l'énoncer.
+Le projet d'analyse syntaxique consistait en la réalisation d'un compilateur
+de site web qui retourne un code html propre à partir d'un code source "factice"
+donné par l'énoncé.
 \newline
-L'énoncer proposé plusieur étape au développement permettant une avancé
-pas a pas des possibilité offerte par ce code factice et de sa gestion
+L'énoncé proposait plusieurs étapes au développement permettant une avancée
+pas à pas des possibilités offertes par ce code factice et de sa gestion
 par le compilateur.
 \newline
-Le programme est composé de 3 parties différente. l'analyseur lexical (en flex) ,
-l'analyseur sintaxique permettant de gérer la grammaire (en bison) et les structure
-perméttant le traitement des donné et leur transformation en code html (en C).
+Le programme est composé de 3 parties différentes. l'analyseur lexical (en langage flex) ,
+l'analyseur syntaxique permettant de gérer la grammaire (en langage bison) et les structures
+permettant le traitement des données et leur transformation en code html (en langage C).
 \newline
-A chacune des étapes de dévelopement il s'agissait de vérifier dans un premier
-temps la qualité de la grammaire (si elle accepte se qu'elle doit et refuse
-le code invalide). Et dans un second temps la bonne gestion de nos structure
-et du traitement réalisé sur les donnés afin de les compilé en code html valide.
+A chacune des étapes de dévelopement, il s'agissait de vérifier dans un premier
+temps la qualité de la grammaire (si elle accepte ce qu'elle doit et refuse
+le code invalide), et dans un second temps la bonne gestion de nos structures
+et du traitement réalisé sur les données afin de les compiler en code html valide.
 
 \newpage
 
-\section{Les premiere foret}
+\section{Les premieres forêts}
 
-Notre premier objectif étais d'implementer un début d'analyseur lexical et sintaxique
-permettant d'accepter le premiere éxemple du code factice donné dans l'énoncer.
+Notre premier objectif était d'implementer un début d'analyseur lexical et syntaxique
+permettant d'accepter le premiere éxemple du code factice donné dans l'énoncé.
 
-\subsection{les structures}
+\subsection{Les structures}
 
-Pour commencer se projet nous nous somme penché sur la gestion des struture
-"tree" et "attributes" donné par l'énoncer. Nous avons implémenté les créateurs et les
-libérateurs ainsi que les accesseur et les modificateur. Rien de trés compliqué a se niveau
-la la dificulté allait étre de bien tout construire au niveau de l'analyseur sintaxique.
+Pour commencer ce projet, nous nous somme penchés sur la gestion des strutures
+"tree" et "attributes" données par l'énoncé. Nous avons implémenté les créateurs et les
+libérateurs ainsi que les accesseurs et les modificateurs. Rien de très compliqué a ce niveau
+là, la dificulté était de bien tout construire au niveau de l'analyseur syntaxique.
 
-\subsection{l'analyseur lexical}
+\subsection{L'analyseur lexical}
 
-Nous nous somme ensuite penché sur l'analyseur lexical. Nous voulions essayé de
-minimisé au plus possible le traitement au niveau de flex afin que tout soit gérer
-par notre gramaire dans lanalyseur sintaxique. Nous avons donc implémenter
-quelque chose de trés simple qui se contente de renvoyer des token pour tout les
-character ou mot que nous penssion nécessaire. Cela sans gestion d'état ou action
-particuliere.
+Nous nous somme ensuite penchés sur l'analyseur lexical. Nous voulions essayer de
+minimiser le plus possible le traitement au niveau de flex afin que tout soit géré
+par notre grammaire dans l'analyseur syntaxique. Nous avons donc implémenté
+quelque chose de très simple qui se contente de renvoyer des tokens pour tous les
+characters ou mots que nous pensions nécessaires. Cela sans gestion d'états ou actions
+particulières.
 
-\subsection{l'analyseur sintaxique}
+\subsection{L'analyseur syntaxique}
 
-Nous somme ensuite ataqué a l'nalyseur sintaxique. La partie central de se projet.
-Nous avons définit une suite de régle plutot simple dans un premier temps. Le but
-n'etais pas encore de testé si nos arbre et nos foret s'imbriqué comme il fallait
+Nous somme ensuite ataqués à l'analyseur syntaxique, la partie centrale de ce projet.
+Nous avons défini une suite de règles plutôt simples dans un premier temps. Le but
+n'etait pas encore de tester si nos arbres et nos forêts s'imbriquaient comme il fallait,
 mais simplement de vérifier que nous avions une grammaire acceptante quand c'etait
-le cas et retourné une erreur le reste du temps.
+le cas et de retourner une erreur le reste du temps.
 \newline
-Outre toute les petites difficulté classique ,due a notre manque d'expérience
-sur la gestion des grammaire. Nous avons rencontré ici notre premiere
+Outre toutes les petites difficultés classiques dues à notre manque d'expérience
+sur la gestion des grammaires, Nous avons rencontré ici notre première
 grosse dificulté.
 
-\subsubsection{la gestion des espaces}
+\subsubsection{La gestion des espaces}
 
-Les espaces étais le premier élément compliqué a gérer. il doive parfois étre accepter
-d'autre fois non. Et il est dificile de gérer dans la grammaire tout ces cas de figure
-Dans un premier temps nous avons définit une regle "SPACES: SPACES | %empty". Et nous
-avons mis des SPACES un peu partout dans la grammaire. Mais cela a entrainer 2 probleme
-le premier étais que meme si notre grammaire devenait acceptante sur les bon fichier
-elle l'étais aussi a des moment ou elle n'aurait pas du l'étre. le deuxieme étais un
-nombre phénoménal de conflit reduction/réduction (+ de 50).
+Les espaces représentaient le premier élément compliqué à gérer. il doivent parfois étre acceptés,
+d'autres fois non. Il est difficile de gérer dans la grammaire tous ces cas de figure.
+Dans un premier temps, nous avons défini une regle "SPACES: SPACES | %empty", et nous
+avons mis des SPACES un peu partout dans la grammaire. Mais celà entrainait 2 problèmes :
+le premier était que même si notre grammaire devenait acceptante sur les bons fichiers, 
+elle l'était aussi à des moments où elle n'aurait pas du l'être. Le deuxième était un
+nombre phénoménal de conflits reduction/réduction (+ de 50).
 \newline
-Nous avons donc décider aprés réfléxion de nous résoudre a compléxifier le code lex
-afin d'éffectuer un poste traitement sur les espace a accepter ou non.
-Nous avons définit un etat ainsi qu'une variable "lastIsSpace" charger de mémorisé
-si les dernier charactere etais des espaces. Cela nous a permit de ne retourné les
-espace que quand cela étais vraiment necessaire et d'énormement simplifier la grammaire.
-Nous avons alors réussi a obtenir une grammaire convainquante.
+Nous avons donc décidé après réfléxion de nous résoudre a complexifier le code lex
+afin d'éffectuer un poste traitement sur les espaces à accepter ou non.
+Nous avons défini un état ainsi qu'une variable "lastIsSpace" chargée de mémoriser
+si les derniers caractères etaient des espaces. Celà nous a permi de ne retourner les
+espaces que quand celà était vraiment nécessaire et d'énormement simplifier la grammaire.
+Nous avons alors réussi a obtenir une grammaire satisfaisante.
 
 
 
