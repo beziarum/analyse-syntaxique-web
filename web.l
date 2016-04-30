@@ -74,13 +74,13 @@ else                          {
                                  return ELSE;
                               }
 
-(_|([xX][mM][lL])){LEX_LABEL}* {
+(_{LEX_LABEL}|([xX][mM][lL])){LEX_LABEL}* {
                                  lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return NAME;
                               }
 
-(_|[[:alpha:]]){LEX_LABEL}*   {
+((_{LEX_LABEL}|[[:alpha:]]){LEX_LABEL}*   {
                                  lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return TAG;
