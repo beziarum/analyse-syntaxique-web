@@ -14,7 +14,7 @@ void tabulation(int fd,int tab){
 
 bool emitfd( int fd,struct ast * ast,int tab){
     if(ast==NULL)
-	return true;
+	return false;
     if(ast->type == WORD){
 	//tabulation(fd,tab);
 	dprintf(fd,"%s",ast->node->str);
@@ -25,7 +25,8 @@ bool emitfd( int fd,struct ast * ast,int tab){
         if(emitfd(fd,ast->node->forest->head,tab))
 	    dprintf(fd,"\n");
             
-	return emitfd(fd,ast->node->forest->tail,tab);
+	return ast->node->forest->tail !=NULL &&
+	    emitfd(fd,ast->node->forest->tail,tab);
 	    //dprintf(fd,"\n")
 	
     }
