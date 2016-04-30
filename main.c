@@ -13,7 +13,7 @@ extern int yydebug;
 
 int main(int argc, char** argv)
 {
-    yydebug=1;
+    yydebug=0;
     e=initial_env;
     if(argc>=2)
     {
