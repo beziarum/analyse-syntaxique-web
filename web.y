@@ -164,7 +164,7 @@ node:		TAG flattributs open_braces forest CLOSE_BRACES
 	|	TAG SLASH
 	        {
 		    $$=mk_tree($TAG,
-			       false,
+			       true,
 			       true,
 			       false,
 			       NULL,
@@ -179,12 +179,14 @@ node:		TAG flattributs open_braces forest CLOSE_BRACES
 			       $flattributs,
 			       NULL);
 		}
-	| LET name EQUAL tree IN node[n2]
+	| LET name EQUAL tree[t1] IN node[n2]
 		{
-		    struct ast* fun=mk_fun($name,($tree));
-		    $$=mk_app(fun,$n2);
+		    $$=mk_app(mk_fun($name,$n2),$t1);
 		}
-	| node WHERE name EQUAL tree
+	| node[n2] WHERE name EQUAL tree[t1]
+		{
+		    $$=mk_app(mk_fun($name,$n2),$t1);
+		}
 	;
 name:		NAME
 	|	TAG

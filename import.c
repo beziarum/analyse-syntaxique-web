@@ -47,9 +47,10 @@ struct env * process_binding_instruction(char * name, struct ast * a, struct env
     m->closure = mk_closure(a,e);
     m->stack=NULL;
     compute(m);
+    struct env* ret=mk_env(name,m->closure,e);
     free(m);
     //should free stack...
-    return mk_env(name,m->closure,e);
+    return ret;
 }
     
 
