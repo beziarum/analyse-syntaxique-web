@@ -10,7 +10,6 @@ int lastIsSpace=0;
 
 LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
 
-
 %s TXT
 
 %%
@@ -21,31 +20,31 @@ LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
                                  return DQUOTE;
                               }
 
-<TXT>[^[:space:]"]+           {  //"// juste pour la coloration syntaxique qui plante pas mal sinon
+<TXT>[^[:space:]"]+           {
                                  lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return TXTWORD;
                               }
 
 <TXT>[[:space:]]+             {
-                              	lastIsSpace = 1;
-                              	return SPACES;
+                                 lastIsSpace = 1;
+                                 return SPACES;
                               }
 
 
-let                          {
+let                           {
                                  lastIsSpace=0;
                                  return LET;
                               }
 
 where                         {
-                              	lastIsSpace=0;
-                              	return WHERE;
+                                 lastIsSpace=0;
+	   return WHERE;
                               }
 
 in                            {
-                               lastIsSpace=0;
-                               return IN;
+                                 lastIsSpace=0;
+                                 return IN;
                               }
 
 emit                          {
@@ -60,18 +59,18 @@ fun                           {
                               }
 
 if                            {
-                              lastIsSpace=0;
-                              return IF;
+                                 lastIsSpace=0;
+                                 return IF;
                               }
 
 then                          {
-                              lastIsSpace=0;
-                              return THEN;
+                                 lastIsSpace=0;
+                                 return THEN;
                               }
 
 else                          {
-                              lastIsSpace=0;
-                              return ELSE;
+                                 lastIsSpace=0;
+                                 return ELSE;
                               }
 
 [+*]                          {
@@ -86,13 +85,11 @@ else                          {
                                  return NAME;
                               }
 
-
 {LEX_LABEL}                   {
                                  lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return TAG;
                               }
-
 
 [[:space:]]+                  {
                                  lastIsSpace=1;
@@ -103,7 +100,6 @@ else                          {
                                  BEGIN TXT;
                                  return DQUOTE;
                               }
-
 
 \[                            {
                                  int tmp=lastIsSpace;
@@ -149,8 +145,11 @@ else                          {
 
 \,                            {
                                  int tmp=lastIsSpace;
-                                 lastIsSpace=0;										if(tmp)											return E_COMMA;										else
-                               return COMMA;
+                                 lastIsSpace=0;
+                                 if(tmp)
+                                    return E_COMMA;
+                                 else
+                                    return COMMA;
                               }
 
 \;                            {
@@ -164,21 +163,21 @@ else                          {
                               }
 
 \+                            {
-                              lastIsSpace=0;
-                              yylval.ast=mk_binop(PLUS);
-                              return BINARYOP;
+                                 lastIsSpace=0;
+                                 yylval.ast=mk_binop(PLUS);
+                                 return BINARYOP;
                               }
 
 \-                            {
-                              lastIsSpace=0;
-                              yylval.ast=mk_binop(MINUS);
-                              return BINARYOP;
+                                 lastIsSpace=0;
+                                 yylval.ast=mk_binop(MINUS);
+                                 return BINARYOP;
                               }
 
-\*                           {
-                              lastIsSpace=0;
-                              yylval.ast=mk_binop(MULT);
-                              return MULT;
+\*                            {
+                                 lastIsSpace=0;
+                                 yylval.ast=mk_binop(MULT);
+                                 return MULT;
                               }
 
 %%
