@@ -22,9 +22,9 @@ extern struct env* e;
 %token			E_COMMA			// , + espace devant
 %token			DQUOTE         // "
 %token			EQUAL          // =
-%token 			PLUS					 // +
-%token 			MINUS					 // -
-%token 			MULT 					 // *
+%token 			LPLUS	       // +
+%token 			LMINUS	       // -
+%token 			LMULT 	       // *
 %token			SEMICOLON      // ;
 %token			EOL            // \n
 %token			ARROW
@@ -42,7 +42,7 @@ extern struct env* e;
 %token 			IF
 %token 			ELSE
 %token 			THEN
-
+%token			LEMIT
 %union
 {
     struct tree * t;
@@ -54,8 +54,8 @@ extern struct env* e;
 }
 
 %type	<txt>		TAG ALNUMSUITE TXTWORD NAME name
-%type <ast>  node forest word lword string app BINARYOP tree var lname
-%type <ast>	 expression expression-cond
+%type <ast>  node forest word lword string BINARYOP tree var lname emit LEMIT
+%type <ast>	 expression cond
 %type <attr> attribut lattributs flattributs
 %debug
 
@@ -67,7 +67,6 @@ web:		blet forest
 		    //display_tree($2);
 		    printf("\n");
 		}
-		| expression-cond blet forest
 	;
 
 
@@ -89,12 +88,13 @@ forest:		forest[f1] forest[f2]
 		;
 tree:		string
 	|	open_braces forest  CLOSE_BRACES {$$=$2;}
-	|	app {$$=NULL;}
+	|	emit {$$=NULL; process_instruction($1,e);}
 	|	node
 		{
 		    $$=$node;
 		}
 	|	var
+	|	cond
 
 	;
 
@@ -199,22 +199,23 @@ let:		LET name EQUAL tree SEMICOLON
 	;
 
 blet:		let blet
-	|	app blet {process_instruction($1,e);}
+	|	funct blet
+	|	emit blet {process_instruction($1,e);}
         //		{process_instruction(mk_app(mk_app(mk_binop(EMIT),mk_word("test")),mk_tree("prout",true,true,false,NULL,NULL)));}
 	|	%empty
 	;
 
-app:		BINARYOP string[f1] tree[f2] { $$=mk_app(mk_app($BINARYOP,$2),$3);}
+emit:		LEMIT string[f1] tree[f2] { $$=mk_app(mk_app($LEMIT,$2),$3);}
 	;
 
 
 var:		name COMMA {$$ = mk_var($name);}
-	| name
 	;
 
 funct:		LET name lname EQUAL tree
 	|	LET name EQUAL LFUN lname ARROW tree
 	|	LET name lname EQUAL LFUN lname ARROW tree
+	|	expr
 	;
 
 lname:		lname[ln] name {$$=mk_forest(false,$ln,mk_word($name));}
@@ -237,12 +238,9 @@ space: 		SPACES
 	|	%empty
 		;
 
-expression-cond : IF expression THEN expression ELSE expression
-		{$$=mk_cond($2, $4, $6);}
-  | IF expression THEN expression  {$$=mk_cond($2, $4, NULL);}
+expr:		tree BINARYOP tree
+		;
 
-expression : funct
-	| let
-	//| var binop var
-	| var
-	| expression-cond
+cond: IF tree THEN tree ELSE tree
+		{$$=mk_cond($2, $4, $6);}
+		;
