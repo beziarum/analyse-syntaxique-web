@@ -36,6 +36,9 @@ extern struct env* e;
 %token			WHERE
 %token			LFUN
 %token			LET
+%token 			IF
+%token 			ELSE
+%token 			THEN
 
 %union
 {
@@ -49,6 +52,7 @@ extern struct env* e;
 
 %type	<txt>		TAG ALNUMSUITE TXTWORD NAME name
 %type <ast>  node forest word lword string app BINARYOP tree var lname
+%type <ast>	 expression expression-cond
 %type <attr> attribut lattributs flattributs
 %debug
 
@@ -225,3 +229,11 @@ slash:		SLASH
 space: 		SPACES
 	|	%empty
 		;
+
+expression-cond : IF expression THEN expression ELSE expression
+		{$$=mk_cond($2, $4, $6);}
+  | IF expression THEN expression  {$$=mk_cond($2, $4, NULL);}
+
+expression : funct
+	| let
+	| expression-cond

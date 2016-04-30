@@ -14,7 +14,21 @@ LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
 %s TXT
 
 %%
-
+if
+                              {
+                              lastIsSpace=0;
+                              return IF;
+                              }
+then
+                              {
+                              lastIsSpace=0;
+                              return THEN;
+                              }
+else
+                              {
+                              lastIsSpace=0;
+                              return ELSE;
+                              }
 
 <TXT>\"                       {
                                  BEGIN INITIAL;
@@ -69,7 +83,7 @@ fun                           {
 fun                           {
                               lastIsSpace=0;
                               return FUN;
-                              }                             
+                              }
 
 [xX][mM][lL]{LEX_LABEL}       {
                                  lastIsSpace=0;
