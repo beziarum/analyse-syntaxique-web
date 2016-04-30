@@ -175,7 +175,7 @@ else                          {
                                  return MULT;
                               }
 
-\<\=                          {
+"<="                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(LEQ);
                                  return LEQ;
@@ -187,7 +187,7 @@ else                          {
                                  return LE;
                               }
 
-\>\=                          {
+">="                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(GEQ);
                                  return GEQ;
@@ -199,19 +199,19 @@ else                          {
                                  return GE;
                               }
 
-\!\=                          {
+"!\="                         {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(NEQ);
                                  return NEQ;
                               }
 
-\|\|                          {
+"||"                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(OR);
                                  return OR;
                               }
 
-\&\&                          {
+"&&"                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(AND);
                                  return AND;
