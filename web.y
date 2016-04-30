@@ -96,7 +96,7 @@ tree:		string
 		}
 	|	var
 	|	cond
-
+	|	expr
 	;
 
 nforest:	nforest nforest
