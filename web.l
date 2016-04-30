@@ -163,4 +163,19 @@ else                          {
                                  return ARROW;
                               }
 
+\+                            {
+                              lastIsSpace=0;
+                              return PLUS;
+                              }
+
+\-                            {
+                              lastIsSpace=0;
+                              return MINUS;
+                              }
+
+\*                           {
+                              lastIsSpace=0;
+                              return MULT;
+                              }
+
 %%

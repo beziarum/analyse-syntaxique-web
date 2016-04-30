@@ -22,6 +22,9 @@ extern struct env* e;
 %token			E_COMMA			// , + espace devant
 %token			DQUOTE         // "
 %token			EQUAL          // =
+%token 			PLUS					 // +
+%token 			MINUS					 // -
+%token 			MULT 					 // *
 %token			SEMICOLON      // ;
 %token			EOL            // \n
 %token			ARROW
@@ -204,6 +207,7 @@ app:		BINARYOP string[f1] tree[f2] { $$=mk_app(mk_app($BINARYOP,$2),$3);}
 
 
 var:		name COMMA {$$ = mk_var($name);}
+	| name
 	;
 
 funct:		LET name lname EQUAL tree
@@ -237,5 +241,6 @@ expression-cond : IF expression THEN expression ELSE expression
 
 expression : funct
 	| let
-	| TAG
+	//| var binop var
+	| var
 	| expression-cond
