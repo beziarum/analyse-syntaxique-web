@@ -11,6 +11,7 @@ int lastIsSpace=0;
 LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
 
 %s TXT
+%x IMPORT
 
 %%
 
@@ -214,6 +215,11 @@ else                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(AND);
                                  return AND;
+                              }
+
+\$                            {
+                              	lastIsSpace=0;
+                              	BEGIN IMPORT;
                               }
 
 %%
