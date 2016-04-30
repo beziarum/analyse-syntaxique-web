@@ -8,7 +8,7 @@
 int lastIsSpace=0;
 %}
 
-LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
+LEX_LABEL [[:alpha:][:digit:]'._] //'
 
 %s TXT
 %x IMPORT
@@ -21,7 +21,7 @@ LEX_LABEL ([[:alpha:]][[:alpha:][:digit:]'._]*)|(_[[:alpha:][:digit:]'._]+)
                                  return DQUOTE;
                               }
 
-<TXT>[^[:space:]"]+           {
+<TXT>[^[:space:]"]+           {//"// pour la coloration
                                  lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return TXTWORD;
@@ -74,14 +74,14 @@ else                          {
                                  return ELSE;
                               }
 
-[xX][mM][lL]{LEX_LABEL}       {
+(_|([xX][mM][lL]){LEX_LABEL}+ {
                                  lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return NAME;
                               }
 
-{LEX_LABEL}                   {
-                                 lastIsSpace=0;
+(_|[[:alpha:]]){LEX_LABEL}+   {
+                                 lastisspace=0;
                                  yylval.txt=strdup(yytext);
                                  return TAG;
                               }
@@ -175,7 +175,7 @@ else                          {
                                  return MULT;
                               }
 
-\<\=                          {
+"<="                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(LEQ);
                                  return LEQ;
@@ -187,7 +187,7 @@ else                          {
                                  return LE;
                               }
 
-\>\=                          {
+">="                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(GEQ);
                                  return GEQ;
@@ -199,19 +199,19 @@ else                          {
                                  return GE;
                               }
 
-\!\=                          {
+"!\="                         {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(NEQ);
                                  return NEQ;
                               }
 
-\|\|                          {
+"||"                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(OR);
                                  return OR;
                               }
 
-\&\&                          {
+"&&"                          {
                                  lastIsSpace=0;
                                  yylval.ast=mk_binop(AND);
                                  return AND;
