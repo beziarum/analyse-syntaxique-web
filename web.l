@@ -174,4 +174,46 @@ else                          {
                                  return MULT;
                               }
 
+\<\=                          {
+                                 lastIsSpace=0;
+                                 yylval.ast=mk_binop(LEQ);
+                                 return LEQ;
+                              }
+
+\<                            {
+                                 lastIsSpace=0;
+                                 yylval.ast=mk_binop(LE);
+                                 return LE;
+                              }
+
+\>\=                          {
+                                 lastIsSpace=0;
+                                 yylval.ast=mk_binop(GEQ);
+                                 return GEQ;
+                              }
+
+\>                            {
+                                 lastIsSpace=0;
+                                 yylval.ast=mk_binop(GE);
+                                 return GE;
+                              }
+
+\!\=                          {
+                                 lastIsSpace=0;
+                                 yylval.ast=mk_binop(NEQ);
+                                 return NEQ;
+                              }
+
+\|\|                          {
+                                 lastIsSpace=0;
+                                 yylval.ast=mk_binop(OR);
+                                 return OR;
+                              }
+
+\&\&                          {
+                                 lastIsSpace=0;
+                                 yylval.ast=mk_binop(AND);
+                                 return AND;
+                              }
+
 %%
