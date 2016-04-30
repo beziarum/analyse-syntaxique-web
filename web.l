@@ -8,7 +8,7 @@
 int lastIsSpace=0;
 %}
 
-LEX_LABEL [[:alpha:][:digit:]'._]
+LEX_LABEL ([[:alpha:][:digit:]'._])
 
 %s TXT
 %x IMPORT
@@ -74,13 +74,13 @@ else                          {
                                  return ELSE;
                               }
 
-(_|([xX][mM][lL])){LEX_LABEL}+ {
+(_|([xX][mM][lL])){LEX_LABEL}* {
                                  lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return NAME;
                               }
 
-(_|[[:alpha:]]){LEX_LABEL}+   {
+(_|[[:alpha:]]){LEX_LABEL}*   {
                                  lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return TAG;

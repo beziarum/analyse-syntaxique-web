@@ -100,6 +100,7 @@ tree:		string
 	|	var
 	|	cond
 	|	expr
+	|	reference
 	;
 
 nforest:	nforest nforest
@@ -252,9 +253,16 @@ cond: IF tree THEN tree ELSE tree
 
 path:			SLASH name
 	|			path SLASH name
+	;
 
-debpath: 	DOLLAR path
-	|			DOLLAR POINT path
+debpath: 	DOLLAR name path
+	|			DOLLAR point name path
 	|			DOLLAR name
+	;
 
 reference: 	debpath ARROW name
+	;
+
+point: POINT
+	|	point POINT
+	;
