@@ -23,7 +23,7 @@ LEX_LABEL ([[:alpha:][:digit:]'._])
                                  return DQUOTE;
                               }
 
-<TXT>[^[:space:]"]+           {//"// pour la coloration
+<TXT>[^[:space:]"]+           {
                                  lastIsSpace=0;
                                  yylval.txt=strdup(yytext);
                                  return TXTWORD;
