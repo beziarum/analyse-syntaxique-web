@@ -67,8 +67,13 @@ extern struct env* e;
 %%
 
 
+//-----------grammaire des forets, des arbres et des noeuds---------------
 
 web:		blet forest
+		{
+		    printf("Grammaire acceptante\n");
+		}
+	|		blet
 		{
 		    printf("Grammaire acceptante\n");
 		}
@@ -85,27 +90,80 @@ forest:		forest[f1] forest[f2]
 		       $$=mk_forest(false,$f1,$f2);
 		    }
 		}
-	|	nforest forest {$$=$2;}
-	|	forest nforest
-	|	tree
+
+	|		nforest forest {$$=$2;}
+	|		forest nforest
+	|		tree
 	;
 
 tree:		string
-	|	open_braces forest  CLOSE_BRACES {$$=$2;}
-	|	emit {$$=NULL; process_instruction($1,e);}
-	|	node
-		{
-		    $$=$node;
-		}
-	|	var
-	|	cond
-	|	expr
-	|	reference {$$ = NULL;}
+	|		open_braces forest  CLOSE_BRACES {$$=$2;}
+	|		emit {$$=NULL; process_instruction($1,e);}
+	|		node
+			{
+		    	$$=$node;
+			}
+	|		var
+	|		cond
+	|		expr
+	|		reference {$$ = NULL;}
 	;
 
 nforest:	nforest nforest
 	|	open_braces   CLOSE_BRACES
 	;
+
+
+	node:		TAG flattributs open_braces forest CLOSE_BRACES
+			{
+			    $$=mk_tree($TAG,
+				       false,
+				       false,
+				       false,
+				       $flattributs,
+				       $forest);
+			}
+		|	TAG OPEN_BRACES forest  CLOSE_BRACES
+			{
+			    $$=mk_tree($TAG,
+				       false,
+				       false,
+				       false,
+				       NULL,
+				       $forest);
+			}
+		|	TAG SLASH
+		        {
+			    $$=mk_tree($TAG,
+				       true,
+				       true,
+				       false,
+				       NULL,
+				       NULL);
+			}
+		|	TAG flattributs slash
+			{
+			    $$=mk_tree($TAG,
+				       false,
+				       true,
+				       false,
+				       $flattributs,
+				       NULL);
+			}
+		| LET name EQUAL tree[t1] IN node[n2]
+			{
+			    $$=mk_app(mk_fun($name,$n2),$t1);
+			}
+		| node[n2] WHERE name EQUAL tree[t1]
+			{
+			    $$=mk_app(mk_fun($name,$n2),$t1);
+			}
+		;
+
+//-------------------grammaire des attribut.--------------------
+
+
+
 
 flattributs:	OPEN_BRACKET lattributs  CLOSE_BRACKET
 		{
@@ -126,6 +184,10 @@ attribut:	TAG EQUAL string
 		}
 	;
 
+
+//-----------------grammaire des string------------------------
+
+
 string:		DQUOTE lword DQUOTE {$$=$lword;}
 	;
 
@@ -142,109 +204,79 @@ lword:		lword[lw1] word
 	;
 
 word:
-			TXTWORD SPACES 	{$$=mk_tree("",true,false,true,NULL,mk_word($1));}
+			TXTWORD SPACES 	{$$=mk_tree("",true,true,true,NULL,mk_word($1));}
 		|	TXTWORD 				{$$=mk_word($1);}
 		;
 
-node:		TAG flattributs open_braces forest CLOSE_BRACES
-		{
-		    $$=mk_tree($TAG,
-			       false,
-			       false,
-			       false,
-			       $flattributs,
-			       $forest);
-		}
-	|	TAG OPEN_BRACES forest  CLOSE_BRACES
-		{
-		    $$=mk_tree($TAG,
-			       false,
-			       false,
-			       false,
-			       NULL,
-			       $forest);
-		}
-	|	TAG SLASH
-	        {
-		    $$=mk_tree($TAG,
-			       true,
-			       true,
-			       false,
-			       NULL,
-			       NULL);
-		}
-	|	TAG flattributs slash
-		{
-		    $$=mk_tree($TAG,
-			       false,
-			       true,
-			       false,
-			       $flattributs,
-			       NULL);
-		}
-	| LET name EQUAL tree[t1] IN node[n2]
-		{
-		    $$=mk_app(mk_fun($name,$n2),$t1);
-		}
-	| node[n2] WHERE name EQUAL tree[t1]
-		{
-		    $$=mk_app(mk_fun($name,$n2),$t1);
-		}
+//-----------------------------name------------------------------------
+
+
+name:			NAME
+		|		TAG
 	;
 
-name:		NAME
-	|	TAG
+lname:		lname[ln] name {$$=mk_forest(false,$ln,mk_word($name));}
+	|			name {$$=mk_word($name);}
 	;
 
-let:		LET name EQUAL tree SEMICOLON
+//--------------Gestion des variables-----------------------------
+
+let:			LET name EQUAL tree SEMICOLON
 		{
 		    e=process_binding_instruction($name,$tree,e);
-		    fprintf(stderr,"proc %s\n",$name);
 		}
 	;
 
 blet:		blet let
-	|	blet funct SEMICOLON
-	|	blet emit SEMICOLON {process_instruction($2,e);}
-	|	%empty
+	|		blet funct SEMICOLON
+	|		blet emit SEMICOLON {process_instruction($2,e);}
+	|		%empty
 	;
-
-emit:		LEMIT string[f1] tree[f2] { $$=mk_app(mk_app($LEMIT,$2),$3);}
-	;
-
 
 var:		name COMMA {$$ = mk_var($name);}
 	;
 
-funct:		LET name lname EQUAL tree
-	|	LET name EQUAL LFUN lname ARROW tree
-	|	LET name lname EQUAL LFUN lname ARROW tree
-	|	expr
+
+emit:		LEMIT string[f1] tree[f2] { $$=mk_app(mk_app($LEMIT,$2),$3);}
 	;
 
-lname:		lname[ln] name {$$=mk_forest(false,$ln,mk_word($name));}
-	|	name {$$=mk_word($name);}
+//---------------------- Fonction---------------------------
+
+
+funct:		LET name lname EQUAL tree
+	|			LET name EQUAL LFUN lname ARROW tree
+	|			LET name lname EQUAL LFUN lname ARROW tree
+	|			expr
 	;
+
+//--------------------------Divers---------------------------------
 
 open_braces:	OPEN_BRACES
-	|	E_OPEN_BRACES
+	|				E_OPEN_BRACES
 	;
 
 
 slash:		SLASH
-	|	E_SLASH
+	|			E_SLASH
 	;
 
 space: 		SPACES
-	|	%empty
+	|			%empty
 	;
 
 expr:		tree BINARYOP tree
 	;
 
-cond: IF tree THEN tree ELSE tree
-		{$$=mk_cond($2, $4, $6);}
+//------------------expression conditionnelle-------------------
+
+cond: 	IF tree THEN tree ELSE tree
+			{$$=mk_cond($2, $4, $6);}
 	;
+
+
+
+//--------------grammaire de la gestion des fichier multiple.------------
+
 
 
 path:			SLASH name {$$=NULL;}
@@ -259,6 +291,6 @@ debpath: 	DOLLAR name path	{$$=NULL;}
 reference: 	debpath ARROW name {$$=NULL;}
 	;
 
-point: POINT
-	|	point POINT
+point:		 POINT
+	|			point POINT
 	;

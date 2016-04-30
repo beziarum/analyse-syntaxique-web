@@ -1,0 +1,5 @@
+div{
+$bar->f
+$a/b/bar->f
+$..a/b/bar->f
+}

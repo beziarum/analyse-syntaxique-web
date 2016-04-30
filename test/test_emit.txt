@@ -1,0 +1,1 @@
+emit "index.html" {html{header{br/} body{h1{"Nouvelle Page"}}}}

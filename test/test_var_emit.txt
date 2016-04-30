@@ -1,0 +1,3 @@
+let e1 = br/;
+
+emit "index2.html" {html{header{e1,} body{h1{"Nouvelle Page"}}}}

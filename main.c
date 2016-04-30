@@ -4,12 +4,16 @@
 #include <fcntl.h>
 #include "web.tab.h"
 #include "import.h"
-struct env* initial_env;
+
+
+extern struct env* initial_env;
 struct env* e;
 extern int yydebug;
+
+
 int main(int argc, char** argv)
 {
-    yydebug=0;
+    yydebug=1;
     e=initial_env;
     if(argc>=2)
     {
