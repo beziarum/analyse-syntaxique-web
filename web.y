@@ -43,6 +43,9 @@ extern struct env* e;
 %token 			ELSE
 %token 			THEN
 %token			LEMIT
+%token			POINT
+%token			FLECHE
+%token			DOLLAR
 %union
 {
     struct tree * t;
@@ -245,3 +248,13 @@ expr:		tree BINARYOP tree
 cond: IF tree THEN tree ELSE tree
 		{$$=mk_cond($2, $4, $6);}
 		;
+
+
+path:			SLASH name
+	|			path SLASH name
+
+debpath: 	DOLLAR path
+	|			DOLLAR POINT path
+	|			DOLLAR name
+
+reference: 	debpath ARROW name

@@ -152,7 +152,7 @@ else                          {
                                  return SEMICOLON;
                               }
 
-->                            {
+"->"                            {
                                  lastIsSpace=0;
                                  return ARROW;
                               }
@@ -219,7 +219,13 @@ else                          {
 
 \$                            {
                               	lastIsSpace=0;
-                              	BEGIN IMPORT;
+                              	return DOLLAR;
                               }
+
+\.										{
+											lastIsSpace=0;
+											return POINT;
+										}
+
 
 %%
